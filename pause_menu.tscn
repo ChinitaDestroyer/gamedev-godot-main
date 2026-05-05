@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://1oshkcj05lhe"]
+
+[ext_resource type="Script" uid="uid://cbwq4lg1kl4sf" path="res://pause_menu.gd" id="1_hdmo1"]
+[ext_resource type="Texture2D" uid="uid://dit0ta4xe5v6q" path="res://Play Page( Room ).png" id="2_nwcfo"]
+[ext_resource type="FontFile" uid="uid://curyhh60561od" path="res://fonts/Silkscreen-Regular.ttf" id="3_05uyy"]
+
+[node name="PauseMenu" type="CanvasLayer" unique_id=1475522744]
+process_mode = 3
+script = ExtResource("1_hdmo1")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=996738634]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.5882353)
+
+[node name="TextureRect" type="TextureRect" parent="ColorRect" unique_id=283060449]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_nwcfo")
+expand_mode = 1
+
+[node name="MainPauseUI" type="Control" parent="." unique_id=481918995]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainPauseUI" unique_id=1576786173]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 884.5
+offset_top = 469.5
+offset_right = 995.5
+offset_bottom = 570.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Resume_btn" type="Button" parent="MainPauseUI/VBoxContainer" unique_id=1488472383]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.46666667, 0.015686275, 0.015686275, 1)
+theme_override_fonts/font = ExtResource("3_05uyy")
+theme_override_font_sizes/font_size = 36
+text = "Resume"
+
+[node name="Settings_btn" type="Button" parent="MainPauseUI/VBoxContainer" unique_id=1492267045]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.46666667, 0.015686275, 0.015686275, 1)
+theme_override_fonts/font = ExtResource("3_05uyy")
+theme_override_font_sizes/font_size = 36
+text = "Settings"
+
+[node name="Quit_to_Menu_btn" type="Button" parent="MainPauseUI/VBoxContainer" unique_id=457933171]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.46666667, 0.015686275, 0.015686275, 1)
+theme_override_fonts/font = ExtResource("3_05uyy")
+theme_override_font_sizes/font_size = 36
+text = "Quit to Menu"
+
+[connection signal="pressed" from="MainPauseUI/VBoxContainer/Resume_btn" to="." method="_on_resume_btn_pressed"]
+[connection signal="pressed" from="MainPauseUI/VBoxContainer/Settings_btn" to="." method="_on_settings_btn_pressed"]
+[connection signal="pressed" from="MainPauseUI/VBoxContainer/Quit_to_Menu_btn" to="." method="_on_quit_to_menu_btn_pressed"]

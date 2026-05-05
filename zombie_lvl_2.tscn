@@ -1,0 +1,134 @@
+[gd_scene format=3 uid="uid://cn6qteg78k8s2"]
+
+[ext_resource type="PackedScene" uid="uid://dufq0dgutp038" path="res://base_zombie.tscn" id="1_q5x7b"]
+[ext_resource type="Texture2D" uid="uid://cutp0kt4glttq" path="res://2LVL/Army_zombie/Attack/attack_000.png" id="2_4qdmk"]
+[ext_resource type="Texture2D" uid="uid://ihmyp7pk0wn4" path="res://2LVL/Army_zombie/Attack/attack_001.png" id="3_i8csb"]
+[ext_resource type="Texture2D" uid="uid://dbixuqwf0hmcr" path="res://2LVL/Army_zombie/Attack/attack_002.png" id="4_u3im6"]
+[ext_resource type="Texture2D" uid="uid://duf3e5twc0dx0" path="res://2LVL/Army_zombie/Attack/attack_003.png" id="5_6ud3s"]
+[ext_resource type="Texture2D" uid="uid://bkvadunop57qx" path="res://2LVL/Army_zombie/Attack/attack_004.png" id="6_upv6a"]
+[ext_resource type="Texture2D" uid="uid://xbbxtdm2dvbh" path="res://2LVL/Army_zombie/Attack/attack_005.png" id="7_76xue"]
+[ext_resource type="Texture2D" uid="uid://gx7y7erc8bd5" path="res://2LVL/Army_zombie/Attack/attack_006.png" id="8_kp0se"]
+[ext_resource type="Texture2D" uid="uid://ccnpq1pnr4d37" path="res://2LVL/Army_zombie/Attack/attack_007.png" id="9_opyed"]
+[ext_resource type="Texture2D" uid="uid://c5jtcc8kihcd" path="res://2LVL/Army_zombie/Attack/attack_008.png" id="10_vp3sj"]
+[ext_resource type="Texture2D" uid="uid://cjfo7jpp7xlrt" path="res://2LVL/Army_zombie/Death/death_000.png" id="11_1umph"]
+[ext_resource type="Texture2D" uid="uid://y5ciqbxcwqi2" path="res://2LVL/Army_zombie/Death/death_001.png" id="12_hxcqw"]
+[ext_resource type="Texture2D" uid="uid://bvf3jr0u4tqis" path="res://2LVL/Army_zombie/Death/death_002.png" id="13_m3rx6"]
+[ext_resource type="Texture2D" uid="uid://clff8pnkaj05t" path="res://2LVL/Army_zombie/Death/death_003.png" id="14_jdum6"]
+[ext_resource type="Texture2D" uid="uid://csxs37i5ehyco" path="res://2LVL/Army_zombie/Death/death_004.png" id="15_vpmtu"]
+[ext_resource type="Texture2D" uid="uid://uu0ebhfxwjqa" path="res://2LVL/Army_zombie/Death/death_005.png" id="16_2t0br"]
+[ext_resource type="Texture2D" uid="uid://x3ggn5adc2ab" path="res://2LVL/Army_zombie/Walk/walk_000.png" id="17_dw48p"]
+[ext_resource type="Texture2D" uid="uid://bqs1ti7k06r3t" path="res://2LVL/Army_zombie/Walk/walk_001.png" id="18_0rc6m"]
+[ext_resource type="Texture2D" uid="uid://cskkaebelb5nn" path="res://2LVL/Army_zombie/Walk/walk_002.png" id="19_ggajr"]
+[ext_resource type="Texture2D" uid="uid://bry2b2d2f7xpy" path="res://2LVL/Army_zombie/Walk/walk_003.png" id="20_pgdp1"]
+[ext_resource type="Texture2D" uid="uid://bb4cehifyv665" path="res://2LVL/Army_zombie/Walk/walk_004.png" id="21_oqfa1"]
+[ext_resource type="Texture2D" uid="uid://dpwdamkx31qgm" path="res://2LVL/Army_zombie/Walk/walk_005.png" id="22_6lxie"]
+[ext_resource type="Texture2D" uid="uid://bqoim0nbgo56u" path="res://2LVL/Army_zombie/Walk/walk_006.png" id="23_7welh"]
+[ext_resource type="Texture2D" uid="uid://d107giml2mbcp" path="res://2LVL/Army_zombie/Walk/walk_007.png" id="24_7sxo8"]
+[ext_resource type="Texture2D" uid="uid://mgetoo3fh8vh" path="res://2LVL/Army_zombie/Walk/walk_008.png" id="25_7c58b"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_dhakb"]
+radius = 19.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_q6sk5"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_4qdmk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_i8csb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_u3im6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_6ud3s")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_upv6a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_76xue")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_kp0se")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_opyed")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_vp3sj")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 7.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("11_1umph")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_hxcqw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_m3rx6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_jdum6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_vpmtu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_2t0br")
+}],
+"loop": false,
+"name": &"death",
+"speed": 7.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("17_dw48p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_0rc6m")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_ggajr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_pgdp1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_oqfa1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_6lxie")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_7welh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_7sxo8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_7c58b")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 7.0
+}]
+
+[node name="Zombie_Lvl2" unique_id=1305774650 instance=ExtResource("1_q5x7b")]
+health = 150
+speed = 125.0
+attack_damage = 15
+
+[node name="CollisionShape2D" parent="." index="0" unique_id=1420391507]
+shape = SubResource("CircleShape2D_dhakb")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." index="1" unique_id=587434694]
+rotation = -1.5707964
+scale = Vector2(0.15, 0.15)
+sprite_frames = SubResource("SpriteFrames_q6sk5")
+animation = &"walk"

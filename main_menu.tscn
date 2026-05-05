@@ -1,0 +1,91 @@
+[gd_scene format=3 uid="uid://d2vcnw8o00s04"]
+
+[ext_resource type="Texture2D" uid="uid://dwbkwlitkg3wh" path="res://Main Menu.png" id="1_06t4h"]
+[ext_resource type="Script" uid="uid://4ecxyw0ul8ls" path="res://main_menu.gd" id="1_fu7sn"]
+[ext_resource type="FontFile" uid="uid://curyhh60561od" path="res://fonts/Silkscreen-Regular.ttf" id="2_7vrkn"]
+
+[node name="MainMenu" type="Control" unique_id=1935582410]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_fu7sn")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1074426927]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("1_06t4h")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=411620884]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -151.0
+offset_top = -220.0
+offset_right = 172.0
+offset_bottom = -81.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 10
+
+[node name="Button" type="Button" parent="VBoxContainer" unique_id=400239320]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.46666667, 0.015686275, 0.015686275, 1)
+theme_override_fonts/font = ExtResource("2_7vrkn")
+theme_override_font_sizes/font_size = 36
+text = "PLAY"
+
+[node name="Button2" type="Button" parent="VBoxContainer" unique_id=590660866]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.46666667, 0.015686275, 0.015686275, 1)
+theme_override_fonts/font = ExtResource("2_7vrkn")
+theme_override_font_sizes/font_size = 36
+text = "SETTINGS"
+
+[node name="Button3" type="Button" parent="VBoxContainer" unique_id=1961060254]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.46666667, 0.015686275, 0.015686275, 1)
+theme_override_fonts/font = ExtResource("2_7vrkn")
+theme_override_font_sizes/font_size = 36
+text = "CREDITS"
+
+[node name="Button4" type="Button" parent="VBoxContainer" unique_id=2008397665]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.46666667, 0.015686275, 0.015686275, 1)
+theme_override_fonts/font = ExtResource("2_7vrkn")
+theme_override_font_sizes/font_size = 36
+text = "QUIT"
+
+[node name="Label" type="Label" parent="." unique_id=1143571717]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_top = 180.0
+offset_right = 200.0
+offset_bottom = 317.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.46666667, 0.015686275, 0.015686275, 1)
+theme_override_fonts/font = ExtResource("2_7vrkn")
+theme_override_font_sizes/font_size = 76
+text = "Geneticide 
+Awakening"
+horizontal_alignment = 1
+
+[connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="VBoxContainer/Button2" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="VBoxContainer/Button3" to="." method="_on_credits_pressed"]
+[connection signal="pressed" from="VBoxContainer/Button4" to="." method="_on_exit_pressed"]

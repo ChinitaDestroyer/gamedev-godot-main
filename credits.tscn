@@ -1,0 +1,62 @@
+[gd_scene format=3 uid="uid://b1s58yifrbcop"]
+
+[ext_resource type="Texture2D" uid="uid://dwbkwlitkg3wh" path="res://Main Menu.png" id="1_g4wvt"]
+[ext_resource type="Script" uid="uid://badqmb7lmpgxq" path="res://credits.gd" id="1_pjc1l"]
+[ext_resource type="FontFile" uid="uid://curyhh60561od" path="res://fonts/Silkscreen-Regular.ttf" id="3_j6beo"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4av4j"]
+
+[node name="Credits" type="Control" unique_id=405870133]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_pjc1l")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=841688669]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("1_g4wvt")
+expand_mode = 1
+
+[node name="Button" type="Button" parent="." unique_id=1444251295]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -175.0
+offset_top = -120.0
+offset_right = 175.0
+offset_bottom = -70.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("3_j6beo")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxEmpty_4av4j")
+text = "RETURN TO MAIN MENU"
+
+[node name="Label" type="Label" parent="." unique_id=194763750]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -147.5
+offset_top = 80.0
+offset_right = 147.5
+offset_bottom = 168.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.46666667, 0.015686275, 0.015686275, 1)
+theme_override_fonts/font = ExtResource("3_j6beo")
+theme_override_font_sizes/font_size = 64
+text = "CREDITS"
+
+[connection signal="pressed" from="Button" to="." method="_on_return_pressed"]
