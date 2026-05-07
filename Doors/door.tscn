@@ -1,0 +1,60 @@
+[gd_scene format=3 uid="uid://33o1i0vnqi1u"]
+
+[ext_resource type="Texture2D" uid="uid://bvdcvbco0ws6p" path="res://asset ni oswel/Door 4.png" id="1_42blv"]
+[ext_resource type="Script" uid="uid://6i2jbrfw8ylg" path="res://Doors/door.gd" id="1_ud23n"]
+[ext_resource type="Texture2D" uid="uid://cuonrvmft31q4" path="res://asset ni oswel/Door 1.png" id="2_ud23n"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_8rcos"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_42blv")
+}],
+"loop": true,
+"name": &"closed",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_ud23n")
+}],
+"loop": true,
+"name": &"open",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jgf3r"]
+size = Vector2(288, 65)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g0qkb"]
+size = Vector2(290, 163)
+
+[node name="Door" type="Node2D" unique_id=1643211419]
+script = ExtResource("1_ud23n")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1997208626]
+sprite_frames = SubResource("SpriteFrames_8rcos")
+animation = &"closed"
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=2086971753]
+
+[node name="SolidCollision" type="CollisionShape2D" parent="StaticBody2D" unique_id=1317751684]
+position = Vector2(-4, 130.5)
+shape = SubResource("RectangleShape2D_jgf3r")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1614146998]
+
+[node name="TriggerCollision" type="CollisionShape2D" parent="Area2D" unique_id=1249731260]
+position = Vector2(-4, 132.5)
+shape = SubResource("RectangleShape2D_g0qkb")
+
+[node name="Label" type="Label" parent="." unique_id=565822716]
+offset_left = -118.0
+offset_top = 108.0
+offset_right = 118.0
+offset_bottom = 150.0
+theme_override_font_sizes/font_size = 30
+text = "Press 'E' to open"
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]

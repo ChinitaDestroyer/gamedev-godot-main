@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://dne3prqt4hfxh"]
+
+[ext_resource type="Script" uid="uid://cyj7m57040oku" path="res://dialog_manager.gd" id="1_swmoi"]
+
+[node name="DialogManager" type="CanvasLayer" unique_id=2120574630]
+process_mode = 3
+script = ExtResource("1_swmoi")
+
+[node name="Panel" type="Panel" parent="." unique_id=289769832]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -210.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Label" type="Label" parent="Panel" unique_id=1197105240]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -202.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 30
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Indicator" type="Label" parent="Panel" unique_id=649358942]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -79.0
+offset_top = -23.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 30
+text = "[E] Next ▼"

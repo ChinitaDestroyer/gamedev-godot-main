@@ -40,28 +40,35 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_constants/separation = 10
 
-[node name="Button" type="Button" parent="VBoxContainer" unique_id=400239320]
+[node name="Play" type="Button" parent="VBoxContainer" unique_id=400239320]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.46666667, 0.015686275, 0.015686275, 1)
 theme_override_fonts/font = ExtResource("2_7vrkn")
 theme_override_font_sizes/font_size = 36
 text = "PLAY"
 
-[node name="Button2" type="Button" parent="VBoxContainer" unique_id=590660866]
+[node name="Load" type="Button" parent="VBoxContainer" unique_id=2060600566]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.46666667, 0.015686275, 0.015686275, 1)
+theme_override_fonts/font = ExtResource("2_7vrkn")
+theme_override_font_sizes/font_size = 36
+text = "LOAD"
+
+[node name="Settings" type="Button" parent="VBoxContainer" unique_id=590660866]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.46666667, 0.015686275, 0.015686275, 1)
 theme_override_fonts/font = ExtResource("2_7vrkn")
 theme_override_font_sizes/font_size = 36
 text = "SETTINGS"
 
-[node name="Button3" type="Button" parent="VBoxContainer" unique_id=1961060254]
+[node name="Credits" type="Button" parent="VBoxContainer" unique_id=1961060254]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.46666667, 0.015686275, 0.015686275, 1)
 theme_override_fonts/font = ExtResource("2_7vrkn")
 theme_override_font_sizes/font_size = 36
 text = "CREDITS"
 
-[node name="Button4" type="Button" parent="VBoxContainer" unique_id=2008397665]
+[node name="Quit" type="Button" parent="VBoxContainer" unique_id=2008397665]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.46666667, 0.015686275, 0.015686275, 1)
 theme_override_fonts/font = ExtResource("2_7vrkn")
@@ -85,7 +92,7 @@ text = "Geneticide
 Awakening"
 horizontal_alignment = 1
 
-[connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_play_pressed"]
-[connection signal="pressed" from="VBoxContainer/Button2" to="." method="_on_settings_pressed"]
-[connection signal="pressed" from="VBoxContainer/Button3" to="." method="_on_credits_pressed"]
-[connection signal="pressed" from="VBoxContainer/Button4" to="." method="_on_exit_pressed"]
+[connection signal="pressed" from="VBoxContainer/Play" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="VBoxContainer/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="VBoxContainer/Credits" to="." method="_on_credits_pressed"]
+[connection signal="pressed" from="VBoxContainer/Quit" to="." method="_on_exit_pressed"]

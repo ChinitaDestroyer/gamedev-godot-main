@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cnedab3fqp77d"
-path="res://.godot/imported/notes.PNG-233853d127bb244ecf110f92e103c05d.ctex"
+uid="uid://enetmtv8dqpp"
+path="res://.godot/imported/intro_celling.png-41118f5749c41ce10b1df3820d14de6b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://asset ni oswel/notes.PNG"
-dest_files=["res://.godot/imported/notes.PNG-233853d127bb244ecf110f92e103c05d.ctex"]
+source_file="res://intro_celling.png"
+dest_files=["res://.godot/imported/intro_celling.png-41118f5749c41ce10b1df3820d14de6b.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cnedab3fqp77d"
-path="res://.godot/imported/notes.PNG-233853d127bb244ecf110f92e103c05d.ctex"
+uid="uid://du3foneccmatw"
+path="res://.godot/imported/walkblue_004.png-f08b0599e9c2e1a1f8b1db4f2321a885.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://asset ni oswel/notes.PNG"
-dest_files=["res://.godot/imported/notes.PNG-233853d127bb244ecf110f92e103c05d.ctex"]
+source_file="res://Man/no_weapon/walkblue_004.png"
+dest_files=["res://.godot/imported/walkblue_004.png-f08b0599e9c2e1a1f8b1db4f2321a885.ctex"]
 
 [params]
 

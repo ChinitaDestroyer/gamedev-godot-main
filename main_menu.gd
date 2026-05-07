@@ -7,7 +7,7 @@ func _ready():
 # --- PLAY BUTTON ---
 func _on_play_pressed():
 	# This loads your Level Select / Play Page. 
-	get_tree().change_scene_to_file("res://play_page.tscn")
+	get_tree().change_scene_to_file("res://intro.tscn")
 
 # --- SETTINGS BUTTON (UPDATED) ---
 func _on_settings_pressed():

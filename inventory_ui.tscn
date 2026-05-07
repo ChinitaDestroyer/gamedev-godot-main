@@ -1,0 +1,128 @@
+[gd_scene format=3 uid="uid://dec5doweh8qwr"]
+
+[ext_resource type="Script" uid="uid://cyvbb4kujrk7n" path="res://inventory_ui.gd" id="1_5v8q7"]
+[ext_resource type="Script" uid="uid://ddby5iwiaqrk2" path="res://panel.gd" id="2_34y5v"]
+[ext_resource type="Script" uid="uid://brdaekbvd1opu" path="res://inventory_slot.gd" id="2_gf3dx"]
+
+[node name="InventoryUI" type="CanvasLayer" unique_id=358630592]
+script = ExtResource("1_5v8q7")
+
+[node name="Panel" type="Panel" parent="." unique_id=404453902]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_34y5v")
+
+[node name="GridContainer" type="GridContainer" parent="Panel" unique_id=130655719]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -66.0
+offset_right = 100.0
+offset_bottom = 66.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2, 2)
+columns = 3
+
+[node name="ColorRect" type="ColorRect" parent="Panel/GridContainer" unique_id=2090845727]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+color = Color(0.11858138, 0.11858138, 0.11858138, 1)
+script = ExtResource("2_gf3dx")
+
+[node name="ItemIcon" type="TextureRect" parent="Panel/GridContainer/ColorRect" unique_id=845420381]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 4
+
+[node name="ColorRect2" type="ColorRect" parent="Panel/GridContainer" unique_id=1917932367]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+color = Color(0.11858138, 0.11858138, 0.11858138, 1)
+script = ExtResource("2_gf3dx")
+
+[node name="ItemIcon" type="TextureRect" parent="Panel/GridContainer/ColorRect2" unique_id=1119652810]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 4
+
+[node name="ColorRect3" type="ColorRect" parent="Panel/GridContainer" unique_id=369918081]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+color = Color(0.11858138, 0.11858138, 0.11858138, 1)
+script = ExtResource("2_gf3dx")
+
+[node name="ItemIcon" type="TextureRect" parent="Panel/GridContainer/ColorRect3" unique_id=599368909]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 4
+
+[node name="ColorRect4" type="ColorRect" parent="Panel/GridContainer" unique_id=124507409]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+color = Color(0.11858138, 0.11858138, 0.11858138, 1)
+script = ExtResource("2_gf3dx")
+
+[node name="ItemIcon" type="TextureRect" parent="Panel/GridContainer/ColorRect4" unique_id=925792854]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 4
+
+[node name="ColorRect5" type="ColorRect" parent="Panel/GridContainer" unique_id=1841486791]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+color = Color(0.11858138, 0.11858138, 0.11858138, 1)
+script = ExtResource("2_gf3dx")
+
+[node name="ItemIcon" type="TextureRect" parent="Panel/GridContainer/ColorRect5" unique_id=324801718]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 4
+
+[node name="ColorRect6" type="ColorRect" parent="Panel/GridContainer" unique_id=1157726705]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+color = Color(0.11858138, 0.11858138, 0.11858138, 1)
+script = ExtResource("2_gf3dx")
+
+[node name="ItemIcon" type="TextureRect" parent="Panel/GridContainer/ColorRect6" unique_id=150214231]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 4

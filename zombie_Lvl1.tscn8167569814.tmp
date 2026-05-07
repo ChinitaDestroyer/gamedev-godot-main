@@ -26,9 +26,6 @@
 [ext_resource type="Texture2D" uid="uid://djo5b88dpr67u" path="res://1LVL/Zombie1_female/Walk/Walk_007.png" id="24_icrx1"]
 [ext_resource type="Texture2D" uid="uid://dkfb45x35vc70" path="res://1LVL/Zombie1_female/Walk/Walk_008.png" id="25_bagcp"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_32gj6"]
-radius = 15.508062
-
 [sub_resource type="SpriteFrames" id="SpriteFrames_oucj2"]
 animations = [{
 "frames": [{
@@ -61,7 +58,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack",
-"speed": 7.0
+"speed": 15.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -84,7 +81,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"death",
-"speed": 7.0
+"speed": 15.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -116,19 +113,48 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk",
-"speed": 7.0
+"speed": 15.0
 }]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_32gj6"]
+radius = 15.508062
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_s54wi"]
+size = Vector2(165, 26)
+
 [node name="Zombie_Lvl1" unique_id=1305774650 instance=ExtResource("1_s54wi")]
+health = null
+speed = null
+attack_damage = null
+melee_range = null
+special_range = null
+normal_attacks = null
+special_attacks = null
+special_cooldown = null
 
-[node name="CollisionShape2D" parent="." index="0" unique_id=1420391507]
-position = Vector2(5.5, 2.5)
-shape = SubResource("CircleShape2D_32gj6")
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." index="1" unique_id=330823140]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." index="0" unique_id=330823140]
 rotation = -1.5707964
 scale = Vector2(0.15, 0.15)
 sprite_frames = SubResource("SpriteFrames_oucj2")
-animation = &"attack"
-frame = 8
-frame_progress = 1.0
+animation = &"walk"
+frame_progress = 0.7073418
+
+[node name="CollisionShape2D" parent="." index="1" unique_id=1420391507]
+position = Vector2(0, 1)
+shape = SubResource("CircleShape2D_32gj6")
+
+[node name="DetectionArea" type="Area2D" parent="." index="2" unique_id=1311617947]
+position = Vector2(0, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea" index="0" unique_id=1980905813]
+position = Vector2(72.5, -3)
+shape = SubResource("RectangleShape2D_s54wi")
+
+[node name="AttackHitbox" parent="." index="3" unique_id=1683312282]
+position = Vector2(14, 1)
+
+[node name="CollisionShape2D" parent="AttackHitbox" index="0" unique_id=301798742]
+position = Vector2(0, 0)
+
+[connection signal="body_entered" from="DetectionArea" to="." method="_on_detection_area_body_entered"]
+[connection signal="body_exited" from="DetectionArea" to="." method="_on_detection_area_body_exited"]

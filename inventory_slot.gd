@@ -1,35 +1,41 @@
-extends Panel
+extends ColorRect
 
-func _get_drag_data(at_position):
-	# 1. Grab the image inside this slot
-	var item_texture = $TextureRect.texture
+# We will let the main UI script assign this number so the slot knows who it is
+var slot_index: int = -1
+
+# 1. WHAT HAPPENS WHEN YOU CLICK AND DRAG?
+func _get_drag_data(_at_position: Vector2) -> Variant:
+	var item = GlobalInventory.items[slot_index]
 	
-	# 2. If the box is empty, do nothing!
-	if item_texture == null:
+	if item == null:
 		return null
 		
-	# 3. Create a little ghost image to follow your mouse
-	var preview = TextureRect.new()
-	preview.texture = item_texture
-	preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	preview.custom_minimum_size = Vector2(64, 64)
+	# --- NEW: Create a floating image preview ---
+	var preview_texture = TextureRect.new()
+	preview_texture.texture = item["icon"]
+	
+	# Shrink the floating image so it isn't massive while dragging
+	preview_texture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	preview_texture.custom_minimum_size = Vector2(40, 40) 
+	
+	var preview = Control.new()
+	preview.add_child(preview_texture)
+	
+	# Center the image directly under your mouse cursor
+	preview_texture.position = Vector2(-20, -20) 
+	
 	set_drag_preview(preview)
 	
-	# 4. Tell Godot we are dragging this slot
-	return self
+	return {"origin_slot": slot_index}
 
 
-func _can_drop_data(at_position, data):
-	# Only allow dropping if the thing we are dragging is another Panel (slot)
-	return data is Panel
+# 2. CAN I DROP THIS HERE?
+func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
+	# Check if the data we are holding is a Dictionary and came from an inventory slot
+	return typeof(data) == TYPE_DICTIONARY and data.has("origin_slot")
 
 
-func _drop_data(at_position, data):
-	# 1. Save the image that is currently in THIS box
-	var temp_texture = $TextureRect.texture
-	
-	# 2. Take the image from the OLD box and put it in THIS box
-	$TextureRect.texture = data.get_node("TextureRect").texture
-	
-	# 3. Put our saved image back into the OLD box
-	data.get_node("TextureRect").texture = temp_texture
+# 3. WHAT HAPPENS WHEN I LET GO OF THE MOUSE?
+func _drop_data(_at_position: Vector2, data: Variant) -> void:
+	# Tell the global inventory to swap the item we dragged with whatever is in this slot
+	GlobalInventory.swap_items(data["origin_slot"], slot_index)

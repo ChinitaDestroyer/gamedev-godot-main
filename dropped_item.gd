@@ -3,6 +3,7 @@ extends Area2D
 @export var item_texture: Texture2D # This lets you drag ANY icon into the Inspector!
 var player_nearby = false
 var player_node = null
+@onready var prompt_label = $Label
 
 # --- NEW: The memory for the item's file path! ---
 var stored_texture_path: String = ""
@@ -12,16 +13,19 @@ func _ready():
 	if item_texture != null and stored_texture_path == "":
 		stored_texture_path = item_texture.resource_path # Save the path!
 		apply_texture_and_scale(item_texture)
+		prompt_label.visible = false
 
 func _on_body_entered(body):
 	if body.name == "Player_Boy":
 		player_nearby = true
 		player_node = body
+		prompt_label.visible = true
 
 func _on_body_exited(body):
 	if body.name == "Player_Boy":
 		player_nearby = false
 		player_node = null
+		prompt_label.visible = false
 
 func _input(event):
 	# If the player is standing inside the circle and presses E
