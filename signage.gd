@@ -28,7 +28,6 @@ func _input(event: InputEvent) -> void:
 
 
 # --- SIGNALS ---
-
 func _on_body_entered(body: Node2D) -> void:
 	if body.name == "Player":
 		player_in_zone = true

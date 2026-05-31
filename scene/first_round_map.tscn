@@ -25480,7 +25480,6 @@ note_pages = Array[String](["Hey. If you’re reading this, the sedatives finall
 
 [node name="Note2" parent="." unique_id=806188792 instance=ExtResource("12_wioj2")]
 position = Vector2(2194.9998, 1940.1997)
-scale = Vector2(0.9999998, 0.9999998)
 note_pages = Array[String](["If you are reading this, then you finally found the key.", "We are going to Doctor's Office Room 1, we already camped there and that room is already safe.", "So you dont need to worry about being bitten.", "I will leave some gear to you in that room, so it would be best to grab it.", "Be safe out there!"])
 
 [node name="Signage401" parent="." unique_id=1259181952 instance=ExtResource("14_0oe44")]
@@ -25702,5 +25701,4 @@ scale = Vector2(0.99999994, 0.99999994)
 [node name="PauseMenu" parent="." unique_id=1475522744 instance=ExtResource("14_8rsml")]
 
 [node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=255860636]
-visible = false
 color = Color(0.051970966, 0.051970966, 0.051970936, 1)

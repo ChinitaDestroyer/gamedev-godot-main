@@ -23,6 +23,10 @@ var max_ammo: int = 15
 var current_ammo: int = 15
 var is_reloading: bool = false
 
+var tutorial_step: int = 0
+var tutorial_label: Label
+var initial_mouse_pos: Vector2
+
 
 # NEW: A list to track any enemy currently inside our weapon hitbox!
 var enemies_in_range: Array[Node2D] = []
@@ -39,13 +43,12 @@ var enemies_in_range: Array[Node2D] = []
 func _ready() -> void:
 	if Global.has_checkpoint == true:
 		global_position = Global.respawn_position
-		
-		# --- THE FIX: Apply the saved health to the player! ---
 		current_health = Global.player_health
 	else:
-		# If we don't have a checkpoint, start with full health
 		current_health = max_health
-
+		
+		# --- NEW: Start the interactive tutorial on a new game! ---
+		start_movement_tutorial()
 	# Update the UI health bar to match our actual health
 	health_bar.max_value = max_health
 	health_bar.value = current_health
@@ -64,12 +67,24 @@ func _ready() -> void:
 func _on_weapon_equipped(weapon_name: String) -> void:
 	if weapon_name == "Knife":
 		current_weapon_prefix = "knife_"
+		
+		# --- NEW: Melee / Knife Tutorial ---
+		if not Global.seen_melee_tutorial:
+			Global.seen_melee_tutorial = true
+			show_tutorial_message("TUTORIAL: Left Click to attack. The knife is for close-range combat.", 5.0)
+			
 	elif weapon_name == "Pistol": 
 		current_weapon_prefix = "gun_"
+		
+		# --- NEW: Firearm / Pistol Tutorial ---
+		if not Global.seen_gun_tutorial:
+			Global.seen_gun_tutorial = true
+			show_tutorial_message("TUTORIAL: Left Click to shoot. Press [R] to reload.", 5.0)
+			
 	else:
 		current_weapon_prefix = ""
 		
-	# --- NEW: Update the UI whenever we switch weapons! ---
+	# Update the UI whenever we switch weapons!
 	update_hud()
 		
 func _on_armor_equipped(armor_name: String) -> void:
@@ -90,7 +105,6 @@ func _on_armor_equipped(armor_name: String) -> void:
 		armor_bar.hide()
 
 func _physics_process(delta: float) -> void:
-	# Check if attacking first!
 	if is_dead:
 		return
 		
@@ -99,8 +113,12 @@ func _physics_process(delta: float) -> void:
 		move_and_slide()
 		return 
 		
-	# If not attacking, handle normal movement and animation
 	handle_input()
+	
+	# --- NEW: Process the interactive movement steps ---
+	if tutorial_step > 0:
+		handle_tutorial()
+		
 	handle_movement(delta)
 	handle_animation()
 	
@@ -391,3 +409,51 @@ func reload() -> void:
 	
 	# Update the HUD again to restore the normal numbers (e.g., 15/15)
 	update_hud()
+	
+# --- NEW: TUTORIAL FUNCTIONS ---
+
+func setup_tutorial_label() -> void:
+	# Only create it if it doesn't exist yet
+	if not is_instance_valid(tutorial_label):
+		tutorial_label = Label.new()
+		tutorial_label.set_anchors_preset(Control.PRESET_TOP_WIDE)
+		tutorial_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		tutorial_label.add_theme_font_size_override("font_size", 30)
+		tutorial_label.add_theme_color_override("font_outline_color", Color.BLACK)
+		tutorial_label.add_theme_constant_override("outline_size", 4)
+		
+		# Attach it to the Player's existing UI CanvasLayer
+		$UI.add_child(tutorial_label)
+		tutorial_label.position.y = 100
+
+func start_movement_tutorial() -> void:
+	tutorial_step = 1
+	setup_tutorial_label()
+	tutorial_label.text = "TUTORIAL: Use [W, A, S, D] to move."
+	tutorial_label.show()
+
+func handle_tutorial() -> void:
+	if tutorial_step == 1:
+		# If the player inputs any movement...
+		if input_dir != Vector2.ZERO:
+			tutorial_step = 2
+			tutorial_label.text = "TUTORIAL: Move your mouse around to aim your flashlight."
+			initial_mouse_pos = get_viewport().get_mouse_position()
+			
+	elif tutorial_step == 2:
+		# If the player moves their mouse far enough from the starting position...
+		if get_viewport().get_mouse_position().distance_to(initial_mouse_pos) > 150:
+			tutorial_step = 0 # Turn off the tracking
+			show_tutorial_message("TUTORIAL: Explore the facility. Find items and notes.", 4.0)
+
+# Other scripts will call this function to show temporary messages!
+func show_tutorial_message(message: String, duration: float) -> void:
+	setup_tutorial_label()
+	tutorial_label.text = message
+	tutorial_label.show()
+	
+	await get_tree().create_timer(duration).timeout
+	
+	# Only hide if the text hasn't been replaced by a newer tutorial
+	if is_instance_valid(tutorial_label) and tutorial_label.text == message:
+		tutorial_label.hide()

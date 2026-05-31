@@ -14,8 +14,14 @@ func _ready() -> void:
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.name == "Player":
-		prompt.show()
 		can_interact = true
+		prompt.show()
+		
+		# --- NEW: On-screen tutorial without dialog boxes! ---
+		if not Global.seen_note_tutorial:
+			Global.seen_note_tutorial = true # Mark as seen
+			if body.has_method("show_tutorial_message"):
+				body.show_tutorial_message("TUTORIAL: Press [E] to read documents for clues.", 4.0)
 
 func _on_body_exited(body: Node2D) -> void:
 	if body.name == "Player":

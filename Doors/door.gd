@@ -24,9 +24,18 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 		if body.global_position.y < global_position.y:
 			prompt.position.y = 0
 		else:
-			prompt.position.y = 100
+			prompt.position.y = 0
 			
 		prompt.show()
+		
+		# --- NEW: On-screen tutorial for doors! ---
+		if not Global.seen_door_tutorial:
+			Global.seen_door_tutorial = true
+			if body.has_method("show_tutorial_message"):
+				if is_locked:
+					body.show_tutorial_message("TUTORIAL: This door is locked. Find a key to open it.", 5.0)
+				else:
+					body.show_tutorial_message("TUTORIAL: Press [E] to open or close doors.", 4.0)
 
 func _on_area_2d_body_exited(body: Node2D) -> void:
 	if body.name == "Player":

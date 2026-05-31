@@ -3,12 +3,14 @@ extends Node
 signal inventory_updated
 signal weapon_equipped(weapon_name: String)
 
+
 # 1. Your current pockets (what you lose if you die)
 var current_weapons: Array[String] = [] 
 
 # 2. Your permanent vault (what is safe at the checkpoint)
 var checkpoint_weapons: Array[String] = []
 var checkpoint_items: Array = []
+var has_seen_combat_tutorial: bool = false
 
 const MAX_SLOTS = 6
 var items: Array = [] # This will now hold Dictionaries instead of Strings!
@@ -31,15 +33,12 @@ func add_item(item_data: Dictionary) -> bool:
 		if items[i] == null:
 			items[i] = item_data
 			
-			# --- YOU CAN DELETE THIS ENTIRE CHUNK NOW ---
-			# if item_data["type"] == "armor":
-			# 	if equipped_armor == "":
-			# 		equipped_armor = item_data["name"]
-			# 		armor_equipped.emit(equipped_armor)
-			# 		print("Automatically equipped the ", equipped_armor)
-			# --------------------------------------------
-			
 			inventory_updated.emit()
+			
+			# --- NEW: Trigger combat tutorial when picking up the first weapon! ---
+			if item_data["type"] == "weapon" and not has_seen_combat_tutorial:
+				has_seen_combat_tutorial = true
+			
 			return true
 			
 	print("Inventory is full!")

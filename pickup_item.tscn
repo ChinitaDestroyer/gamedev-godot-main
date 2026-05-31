@@ -4,6 +4,9 @@
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_iedf3"]
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_unshaded"]
+light_mode = 1
+
 [node name="PickupItem" type="Area2D" unique_id=1452979519]
 script = ExtResource("1_oimud")
 
@@ -16,8 +19,19 @@ scale = Vector2(2.5, 2.5)
 shape = SubResource("CircleShape2D_iedf3")
 
 [node name="Label" type="Label" parent="." unique_id=1335171720]
-offset_right = 40.0
-offset_bottom = 23.0
+material = SubResource("CanvasItemMaterial_unshaded")
+offset_left = -75.0
+offset_top = -45.0
+offset_right = 75.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 30
+text = "[E] Pick Up"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="body_exited" from="." to="." method="_on_body_exited"]

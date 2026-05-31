@@ -8,6 +8,7 @@ extends Area2D
 @onready var sprite: Sprite2D = $Sprite2D # NEW: Grab the sprite so we can change it!
 
 var can_interact: bool = false
+var player_ref: Node2D = null
 
 func _ready() -> void:
 	var my_id = name + "_" + str(global_position)
@@ -17,7 +18,7 @@ func _ready() -> void:
 		return 
 		
 	prompt.hide()
-	prompt.text = "[E] Pick Up " + item_name
+	prompt.text = "[E] " + item_name
 	update_visuals()
 
 # --- NEW: VISUAL UPDATE FUNCTION ---
@@ -44,11 +45,19 @@ func update_visuals() -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if body.name == "Player":
 		can_interact = true
+		player_ref = body # Save a reference to the player!
 		prompt.show()
+		
+		# Shortened this text since the inventory part happens after pickup now
+		if not Global.seen_item_tutorial:
+			Global.seen_item_tutorial = true 
+			if body.has_method("show_tutorial_message"):
+				body.show_tutorial_message("TUTORIAL: Press [E] to pick up the item.", 4.0)
 
 func _on_body_exited(body: Node2D) -> void:
 	if body.name == "Player":
 		can_interact = false
+		player_ref = null # Clear the memory when they leave
 		prompt.hide()
 
 # --- INPUT HANDLING ---
@@ -59,21 +68,13 @@ func _input(event: InputEvent) -> void:
 		
 		var my_id = name + "_" + str(global_position)
 		
-		# --- THE FIX: Intercept the armor before it goes into the backpack! ---
 		if item_type == "armor":
-			# Tell the Global manager we are wearing it
 			GlobalInventory.equipped_armor = item_name
-			# Emit the signal so the Player script fills up the Armor Bar
 			GlobalInventory.armor_equipped.emit(item_name)
-			
-			# Save it so it doesn't respawn, then delete it from the floor
 			Global.completed_events.append(my_id)
 			queue_free()
-			
-			return # STOP here so it doesn't continue down into the backpack code!
-		# ----------------------------------------------------------------------
+			return 
 		
-		# For all normal items (guns, knives, flashlights, etc.)
 		var my_item_data = {
 			"name": item_name,
 			"type": item_type,
@@ -81,6 +82,21 @@ func _input(event: InputEvent) -> void:
 			"icon": sprite.texture.resource_path 
 		}
 		
+		# If the item successfully goes into the backpack...
 		if GlobalInventory.add_item(my_item_data):
+			
+			# --- NEW: Check if the player exists and can show messages ---
+			if player_ref != null and player_ref.has_method("show_tutorial_message"):
+				
+				# 1. Did we pick up a flashlight?
+				if item_type == "flashlight" and not Global.seen_flashlight_tutorial:
+					Global.seen_flashlight_tutorial = true
+					player_ref.show_tutorial_message("TUTORIAL: Press [F] to turn your flashlight on and off.", 5.0)
+					
+				# 2. Otherwise, show the normal inventory tutorial!
+				elif not Global.seen_inventory_tutorial:
+					Global.seen_inventory_tutorial = true
+					player_ref.show_tutorial_message("TUTORIAL: Press [I] to open your inventory and equip items.", 5.0)
+			
 			Global.completed_events.append(my_id)
 			queue_free()

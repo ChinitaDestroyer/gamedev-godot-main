@@ -9,6 +9,14 @@ var player_health: int = 100
 var completed_events: Array[String] = []
 var checkpoint_events: Array[String] = []
 
+var seen_item_tutorial: bool = false
+var seen_note_tutorial: bool = false
+var seen_door_tutorial: bool = false
+var seen_inventory_tutorial: bool = false
+var seen_melee_tutorial: bool = false
+var seen_gun_tutorial: bool = false
+var seen_flashlight_tutorial: bool = false
+
 
 const SAVE_PATH = "user://save_game.save"
 
