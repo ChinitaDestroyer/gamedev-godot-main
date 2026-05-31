@@ -17,7 +17,7 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	# ----------------------------------------------------------------
 		
 	var preview_texture = TextureRect.new()
-	preview_texture.texture = item["icon"]
+	preview_texture.texture = load(item["icon"])
 	preview_texture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	preview_texture.custom_minimum_size = Vector2(40, 40) 
 	

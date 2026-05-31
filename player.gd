@@ -112,9 +112,6 @@ func _unhandled_input(event: InputEvent) -> void:
 			# Note the new path!
 			if has_node("FlashlightPivot/Flashlight"):
 				$FlashlightPivot/Flashlight.visible = not $FlashlightPivot/Flashlight.visible
-			
-			if has_node("AuraLight"):
-				$AuraLight.visible = not $FlashlightPivot/Flashlight.visible
 
 func attack() -> void:
 	if current_weapon_prefix == "":
@@ -244,17 +241,12 @@ func take_damage(damage_amount: int) -> void:
 func break_armor() -> void:
 	print("The Kevlar Vest was destroyed!")
 	
-	# Find the armor in the inventory and delete it
-	for i in range(GlobalInventory.MAX_SLOTS):
-		var item = GlobalInventory.items[i]
-		if item != null and item["name"] == GlobalInventory.equipped_armor:
-			GlobalInventory.items[i] = null # Delete the item
-			break
-			
+	# --- THE FIX: We deleted the loop that searched the backpack ---
+	# Since armor is passive now, it was never in the backpack to begin with!
+	
 	# Force the player to take off the broken armor
 	GlobalInventory.equipped_armor = ""
 	GlobalInventory.armor_equipped.emit("")
-	GlobalInventory.inventory_updated.emit() # Redraw the backpack
 
 func die() -> void:
 	# Prevent the player from dying multiple times at once

@@ -31,14 +31,13 @@ func add_item(item_data: Dictionary) -> bool:
 		if items[i] == null:
 			items[i] = item_data
 			
-			# --- NEW: Auto-equip armor upon pickup! ---
-			if item_data["type"] == "armor":
-				# Only auto-equip if we aren't already wearing armor
-				if equipped_armor == "":
-					equipped_armor = item_data["name"]
-					armor_equipped.emit(equipped_armor)
-					print("Automatically equipped the ", equipped_armor)
-			# ------------------------------------------
+			# --- YOU CAN DELETE THIS ENTIRE CHUNK NOW ---
+			# if item_data["type"] == "armor":
+			# 	if equipped_armor == "":
+			# 		equipped_armor = item_data["name"]
+			# 		armor_equipped.emit(equipped_armor)
+			# 		print("Automatically equipped the ", equipped_armor)
+			# --------------------------------------------
 			
 			inventory_updated.emit()
 			return true

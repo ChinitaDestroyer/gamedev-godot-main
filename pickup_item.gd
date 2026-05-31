@@ -57,15 +57,30 @@ func _input(event: InputEvent) -> void:
 	if can_interact and event.is_action_pressed("interact"):
 		get_viewport().set_input_as_handled()
 		
+		var my_id = name + "_" + str(global_position)
+		
+		# --- THE FIX: Intercept the armor before it goes into the backpack! ---
+		if item_type == "armor":
+			# Tell the Global manager we are wearing it
+			GlobalInventory.equipped_armor = item_name
+			# Emit the signal so the Player script fills up the Armor Bar
+			GlobalInventory.armor_equipped.emit(item_name)
+			
+			# Save it so it doesn't respawn, then delete it from the floor
+			Global.completed_events.append(my_id)
+			queue_free()
+			
+			return # STOP here so it doesn't continue down into the backpack code!
+		# ----------------------------------------------------------------------
+		
+		# For all normal items (guns, knives, flashlights, etc.)
 		var my_item_data = {
 			"name": item_name,
 			"type": item_type,
 			"value": item_value,
-			"icon": sprite.texture.resource_path# <--- NEW: Grab the image directly from the sprite!
+			"icon": sprite.texture.resource_path 
 		}
+		
 		if GlobalInventory.add_item(my_item_data):
-			# --- THE FIX: Save the exact same ID! ---
-			var my_id = name + "_" + str(global_position)
 			Global.completed_events.append(my_id)
-			
 			queue_free()
