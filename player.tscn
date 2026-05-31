@@ -56,6 +56,7 @@
 [ext_resource type="Texture2D" uid="uid://7h36vnu54mgi" path="res://Man/Knife/Knife_006.png" id="15_tw8ou"]
 [ext_resource type="Texture2D" uid="uid://c5rpu7klcu3he" path="res://Man/Knife/Knife_007.png" id="16_ygbnx"]
 [ext_resource type="Texture2D" uid="uid://brvttamxpsas5" path="res://light.png" id="26_7hik5"]
+[ext_resource type="Script" uid="uid://bg2bovscr4ptn" path="res://quest_log.gd" id="57_tw8ou"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ivps1"]
 animations = [{
@@ -322,7 +323,7 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pylmc"]
-size = Vector2(47, 23)
+size = Vector2(47, 43.5)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tw8ou"]
 bg_color = Color(0, 0, 0, 0.5882353)
@@ -385,10 +386,11 @@ texture = ExtResource("26_7hik5")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WeaponArea" unique_id=536850433]
 z_index = 2
-position = Vector2(0, 21)
+position = Vector2(0, 31.25)
 shape = SubResource("RectangleShape2D_pylmc")
 
 [node name="GunRayCast" type="RayCast2D" parent="." unique_id=1501006207]
+target_position = Vector2(0, 72)
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=1670351972]
 
@@ -449,6 +451,34 @@ offset_right = 295.0
 offset_bottom = 101.0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 4
+
+[node name="QuestLog" type="VBoxContainer" parent="UI" unique_id=1795597997]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -60.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 70.0
+grow_horizontal = 0
+script = ExtResource("57_tw8ou")
+
+[node name="Title" type="Label" parent="UI/QuestLog" unique_id=1937466825]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.86414295, 0.544264, 3.85046e-07, 1)
+text = "Objective: Descent"
+
+[node name="Task1" type="Label" parent="UI/QuestLog" unique_id=603023225]
+layout_mode = 2
+text = "[ ] Gear Up (Room 408)"
+
+[node name="Task2" type="Label" parent="UI/QuestLog" unique_id=155482866]
+layout_mode = 2
+text = "[ ] Find the 4th Floor Key"
+
+[node name="Task3" type="Label" parent="UI/QuestLog" unique_id=617239638]
+layout_mode = 2
+text = "[ ] Escape to the 3rd Floor"
 
 [node name="DeathScreen" type="ColorRect" parent="UI" unique_id=405317684]
 visible = false

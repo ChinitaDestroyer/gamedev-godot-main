@@ -17,9 +17,24 @@ var seen_melee_tutorial: bool = false
 var seen_gun_tutorial: bool = false
 var seen_flashlight_tutorial: bool = false
 var seen_sign_tutorial: bool = false
+var has_main_key: bool = false
+
+# --- QUEST TRACKING ---
+var active_quests: Dictionary = {}
+var quest_requirements: Dictionary = {} # NEW: Remembers what items are needed!
 
 
 const SAVE_PATH = "user://save_game.save"
+
+# Now accepts a second argument: the list of required items!
+func add_quest(quest_name: String, required_items: Array = []) -> void:
+	if not active_quests.has(quest_name):
+		active_quests[quest_name] = false
+		quest_requirements[quest_name] = required_items
+
+func complete_quest(quest_name: String) -> void:
+	if active_quests.has(quest_name):
+		active_quests[quest_name] = true
 
 func save_game() -> void:
 	# Bundle all our important variables into a Dictionary
@@ -28,18 +43,16 @@ func save_game() -> void:
 		"has_checkpoint": has_checkpoint,
 		"respawn_x": respawn_position.x,
 		"respawn_y": respawn_position.y,
-		
-		# --- THE FIX: Write the health to the save file ---
 		"player_health": player_health,
-		
 		"safe_weapons": GlobalInventory.checkpoint_weapons,
 		"safe_items": GlobalInventory.checkpoint_items,
 		"safe_equipped_weapon": GlobalInventory.checkpoint_equipped_weapon,
 		"safe_equipped_armor": GlobalInventory.checkpoint_equipped_armor,
 		"scene_path": current_scene_path,
-		"events": checkpoint_events 
+		"events": checkpoint_events,
+		"quests": active_quests,
+		"has_main_key": has_main_key
 	}
-	
 	
 	# Open a file and write the data as a JSON string
 	var file = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
@@ -68,9 +81,12 @@ func load_game() -> bool:
 	GlobalInventory.equipped_armor = GlobalInventory.checkpoint_equipped_armor
 	current_scene_path = save_data.get("scene_path", "")
 	
-	# --- THE FIX: Load into the checkpoint array, then copy to current! ---
+	# --- THE FIX: We tell the game to load the key variable! ---
+	has_main_key = save_data.get("has_main_key", false)
+	
 	checkpoint_events.assign(save_data.get("events", []))
 	completed_events = checkpoint_events.duplicate()
+	active_quests = save_data.get("quests", {})
 	
 	return true
 	

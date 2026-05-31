@@ -25477,6 +25477,11 @@ tile_set = SubResource("TileSet_0aypv")
 [node name="Note" parent="." unique_id=358346354 instance=ExtResource("12_wioj2")]
 position = Vector2(161.99998, 166.4)
 note_pages = Array[String](["Hey. If you’re reading this, the sedatives finally wore off. I waited as long as I could,", "but the hoard broke through the north wing and the smell started drawing them to this floor.", "I left the key for 4th floor main door to room 428. Probably the staff close the door on this floor", "to avoid the horde to reach this room.", "I left you a flashlight and knife on room 408, 'Cause I know you might need it.", "Move to 3rd floor, and I have something for you that might help you escape this hospital.", "Don't make me regret leaving you behind. Move fast, stay quiet."])
+quests_to_add = {
+"Escape to the 3rd Floor": [],
+"Find the 4th Floor Key": ["3F Main Key"],
+"Gear Up (Room 408)": ["Flashlight", "Knife"]
+}
 
 [node name="Note2" parent="." unique_id=806188792 instance=ExtResource("12_wioj2")]
 position = Vector2(2194.9998, 1940.1997)
@@ -25639,7 +25644,7 @@ item_name = "3F Main Key"
 item_type = "key"
 
 [node name="FlashLight" parent="." unique_id=2047569124 instance=ExtResource("15_0qgq1")]
-position = Vector2(2163.5999, 1948.1998)
+position = Vector2(1075, 599.60004)
 scale = Vector2(0.49999997, 0.49999997)
 item_name = "Flashlight"
 item_type = "flashlight"
@@ -25656,6 +25661,7 @@ scale = Vector2(0.99999994, 0.99999994)
 position = Vector2(2006.5997, 1025.2001)
 scale = Vector2(11.999999, 11.999999)
 next_level_path = "uid://jar64l0cef7i"
+completes_quest = "Escape to the 3rd Floor"
 
 [node name="Zombie" parent="." unique_id=1244593536 instance=ExtResource("20_klhct")]
 position = Vector2(1234.6, 334.6)

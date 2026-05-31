@@ -5,9 +5,11 @@ extends Node2D
 @export_multiline var note_pages: Array[String] = [
 	"This is a blank note."
 ]
-
+@export var quests_to_add: Dictionary = {}
 @onready var prompt: Label = $Label
+@export var next_objective: String = "Find a way out of the facility."
 var can_interact: bool = false
+var player_ref: Node2D = null # NEW: Remember the player
 
 func _ready() -> void:
 	prompt.hide()
@@ -15,23 +17,32 @@ func _ready() -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if body.name == "Player":
 		can_interact = true
+		player_ref = body
 		prompt.show()
 		
-		# --- NEW: On-screen tutorial without dialog boxes! ---
 		if not Global.seen_note_tutorial:
-			Global.seen_note_tutorial = true # Mark as seen
+			Global.seen_note_tutorial = true 
 			if body.has_method("show_tutorial_message"):
 				body.show_tutorial_message("TUTORIAL: Press [E] to read documents for clues.", 4.0)
 
 func _on_body_exited(body: Node2D) -> void:
 	if body.name == "Player":
-		prompt.hide()
 		can_interact = false
+		player_ref = null
+		prompt.hide()
 
+# --- NEW: Read the note and update the objective! ---
 func _input(event: InputEvent) -> void:
-	if can_interact and event.is_action_pressed("interact"):
-		get_viewport().set_input_as_handled() 
+	if can_interact and event.is_action_pressed("interact") and player_ref != null:
+		get_viewport().set_input_as_handled()
 		read_note()
+			
+		for quest_name in quests_to_add.keys():
+			var requirements = quests_to_add[quest_name]
+			Global.add_quest(quest_name, requirements)
+			
+			# Add this print statement!
+			print("Sent quest to Global: ", quest_name, " requiring items: ", requirements)
 
 func read_note() -> void:
 	# --- THE FIX: Pass the custom list from the Inspector into your DialogManager ---
