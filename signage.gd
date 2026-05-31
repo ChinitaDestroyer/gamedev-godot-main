@@ -31,10 +31,17 @@ func _input(event: InputEvent) -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if body.name == "Player":
 		player_in_zone = true
-		# Optional: Show a little "[E] Read" prompt when they get close
+		
+		# Show the "[E] Read" prompt
 		if has_node("Label"):
 			$Label.text = "[E] Read"
 			$Label.show()
+			
+		# --- NEW: On-screen tutorial for signs! ---
+		if not Global.seen_sign_tutorial:
+			Global.seen_sign_tutorial = true
+			if body.has_method("show_tutorial_message"):
+				body.show_tutorial_message("TUTORIAL: Press [E] to read room numbers and signs.", 4.0)
 
 func _on_body_exited(body: Node2D) -> void:
 	if body.name == "Player":

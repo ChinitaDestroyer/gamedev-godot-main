@@ -16,6 +16,7 @@ var seen_inventory_tutorial: bool = false
 var seen_melee_tutorial: bool = false
 var seen_gun_tutorial: bool = false
 var seen_flashlight_tutorial: bool = false
+var seen_sign_tutorial: bool = false
 
 
 const SAVE_PATH = "user://save_game.save"

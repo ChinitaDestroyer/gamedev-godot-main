@@ -358,7 +358,7 @@ script = ExtResource("1_1jxqw")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=643405355]
 scale = Vector2(0.12, 0.12)
 sprite_frames = SubResource("SpriteFrames_ivps1")
-animation = &"armor_gun_attack"
+animation = &"knife_attack"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=334735444]
 shape = SubResource("CircleShape2D_urp6f")
@@ -385,7 +385,7 @@ texture = ExtResource("26_7hik5")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WeaponArea" unique_id=536850433]
 z_index = 2
-position = Vector2(0.5, 22)
+position = Vector2(0, 21)
 shape = SubResource("RectangleShape2D_pylmc")
 
 [node name="GunRayCast" type="RayCast2D" parent="." unique_id=1501006207]

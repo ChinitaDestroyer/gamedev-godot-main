@@ -71,7 +71,10 @@ func _on_weapon_equipped(weapon_name: String) -> void:
 		# --- NEW: Melee / Knife Tutorial ---
 		if not Global.seen_melee_tutorial:
 			Global.seen_melee_tutorial = true
-			show_tutorial_message("TUTORIAL: Left Click to attack. The knife is for close-range combat.", 5.0)
+			show_tutorial_message("TUTORIAL: Left Click to attack. The red box shows your close-range reach.", 5.0)
+			
+			# Trigger the visual range indicator!
+			show_range_visual("melee")
 			
 	elif weapon_name == "Pistol": 
 		current_weapon_prefix = "gun_"
@@ -79,7 +82,10 @@ func _on_weapon_equipped(weapon_name: String) -> void:
 		# --- NEW: Firearm / Pistol Tutorial ---
 		if not Global.seen_gun_tutorial:
 			Global.seen_gun_tutorial = true
-			show_tutorial_message("TUTORIAL: Left Click to shoot. Press [R] to reload.", 5.0)
+			show_tutorial_message("TUTORIAL: Left Click to shoot. The red line shows your bullet path.", 5.0)
+			
+			# Trigger the visual range indicator!
+			show_range_visual("gun")
 			
 	else:
 		current_weapon_prefix = ""
@@ -457,3 +463,53 @@ func show_tutorial_message(message: String, duration: float) -> void:
 	# Only hide if the text hasn't been replaced by a newer tutorial
 	if is_instance_valid(tutorial_label) and tutorial_label.text == message:
 		tutorial_label.hide()
+		
+# --- NEW: DYNAMIC RANGE VISUALIZER ---
+func show_range_visual(weapon_type: String) -> void:
+	if weapon_type == "melee" and has_node("WeaponArea/CollisionShape2D"):
+		# 1. Create a translucent red polygon (box)
+		var visual = Polygon2D.new()
+		visual.color = Color(1.0, 0.0, 0.0, 0.3) # 30% visible Red
+		
+		# --- THE FIX: Dynamically read the exact hitbox! ---
+		var col_node = $WeaponArea/CollisionShape2D
+		var rect_shape = col_node.shape as RectangleShape2D
+		
+		if rect_shape:
+			# Calculate the exact borders based on your scene settings
+			var extents = rect_shape.size / 2.0
+			var center = col_node.position
+			
+			visual.polygon = PackedVector2Array([
+				Vector2(center.x - extents.x, center.y - extents.y), # Top-Left
+				Vector2(center.x + extents.x, center.y - extents.y), # Top-Right
+				Vector2(center.x + extents.x, center.y + extents.y), # Bottom-Right
+				Vector2(center.x - extents.x, center.y + extents.y)  # Bottom-Left
+			])
+		# ---------------------------------------------------
+		
+		# Attach it to WeaponArea so it automatically rotates with the player's aim
+		$WeaponArea.add_child(visual)
+		
+		# Wait 5 seconds, then delete the red box
+		await get_tree().create_timer(5.0).timeout
+		if is_instance_valid(visual):
+			visual.queue_free()
+			
+	elif weapon_type == "gun" and has_node("FlashlightPivot"):
+		# 1. Create a translucent red laser line
+		var visual = Line2D.new()
+		visual.default_color = Color(1.0, 0.0, 0.0, 0.5) # 50% visible Red
+		visual.width = 4.0
+		
+		# Draw a line from the player straight out into the distance
+		visual.add_point(Vector2(0, 0))
+		visual.add_point(Vector2(0, 600)) 
+		
+		# Attach it to the FlashlightPivot since we know it rotates perfectly with your aim
+		$FlashlightPivot.add_child(visual)
+		
+		# Wait 5 seconds, then delete the laser line
+		await get_tree().create_timer(5.0).timeout
+		if is_instance_valid(visual):
+			visual.queue_free()
