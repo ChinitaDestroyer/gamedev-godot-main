@@ -8,6 +8,7 @@ extends CharacterBody2D
 @export var friction: float = 1200.0
 @export var max_health: int = 100
 @export var max_armor: int = 50
+@export var reload_time: float = 1.5 # Takes 1.5 seconds to reload
 
 # --- VARIABLES ---
 var current_health: int = 100
@@ -20,6 +21,8 @@ var is_attacking: bool = false
 var current_armor: int = 0
 var max_ammo: int = 15
 var current_ammo: int = 15
+var is_reloading: bool = false
+
 
 # NEW: A list to track any enemy currently inside our weapon hitbox!
 var enemies_in_range: Array[Node2D] = []
@@ -107,31 +110,37 @@ func _physics_process(delta: float) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if is_dead:
-		return # Stop reading inputs if dead!
+		return 
 		
 	if event.is_action_pressed("attack") and not is_attacking:
 		attack()
-	
+		
+	# --- NEW: Listen for the reload key ---
+	if event.is_action_pressed("reload"):
+		reload()
+		
 	if event.is_action_pressed("toggle_flashlight"):
 		if GlobalInventory.has_item("Flashlight"):
-			
-			# Note the new path!
 			if has_node("FlashlightPivot/Flashlight"):
 				$FlashlightPivot/Flashlight.visible = not $FlashlightPivot/Flashlight.visible
 
 func attack() -> void:
-	if current_weapon_prefix == "":
+	# Stop if no weapon is equipped OR if we are currently reloading
+	if current_weapon_prefix == "" or is_reloading:
+		return
+		
+	# If we try to shoot but have no ammo, trigger reload instead of attacking
+	if current_weapon_prefix == "gun_" and current_ammo <= 0:
+		reload()
 		return
 		
 	is_attacking = true
 	
 	var attack_anim_name = current_armor_prefix + current_weapon_prefix + "attack"
-	print("✅ TRYING TO PLAY ANIMATION: ", attack_anim_name)
 	anim.play(attack_anim_name)
 	
 	perform_attack()
 	
-	# THE FAILSAFE: Wait exactly 0.3 seconds, then force the player free!
 	await get_tree().create_timer(0.3).timeout
 	is_attacking = false
 
@@ -196,12 +205,6 @@ func perform_attack() -> void:
 	# --- RANGED ATTACK (PISTOL) ---
 	elif current_weapon_prefix == "gun_":
 		
-		# --- NEW: Check if we have bullets! ---
-		if current_ammo <= 0:
-			print("Click! Out of ammo!")
-			return # Stop the function here so the gun doesn't shoot!
-			
-		# Subtract a bullet and update the UI text
 		current_ammo -= 1
 		update_hud()
 		
@@ -216,6 +219,10 @@ func perform_attack() -> void:
 				target.take_damage(50) 
 		else:
 			print("You shot into the empty distance!")
+			
+		# --- NEW: Auto-reload immediately after firing the last bullet ---
+		if current_ammo <= 0:
+			reload()
 
 func take_damage(damage_amount: int) -> void:
 	# 1. Does the player have armor?
@@ -360,3 +367,27 @@ func update_hud() -> void:
 		# Hide both the label and the icon if our hands are empty
 		weapon_label.hide()
 		weapon_icon.hide()
+
+func reload() -> void:
+	# Cancel if already reloading, magazine is full, or not holding a gun
+	if is_reloading or current_ammo == max_ammo or current_weapon_prefix != "gun_":
+		return
+		
+	is_reloading = true
+	print("Reloading...")
+	
+	# Override the UI label to show the reloading status
+	if weapon_label:
+		weapon_label.text = "Equipped: Pistol | Ammo: Reloading..."
+	
+	# Wait for the reload time to finish (simulating an animation)
+	await get_tree().create_timer(reload_time).timeout
+	
+	# Refill the magazine and turn off the reloading state
+	current_ammo = max_ammo
+	is_reloading = false
+	
+	print("Reload complete!")
+	
+	# Update the HUD again to restore the normal numbers (e.g., 15/15)
+	update_hud()
