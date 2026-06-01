@@ -19,14 +19,19 @@ var current_armor_prefix: String = ""
 var is_dead: bool = false
 var is_attacking: bool = false 
 var current_armor: int = 0
+
+# --- AMMO SYSTEM ---
 var max_ammo: int = 15
 var current_ammo: int = 15
+var reserve_ammo: int = 30 
 var is_reloading: bool = false
 
 var tutorial_step: int = 0
 var tutorial_label: Label
 var initial_mouse_pos: Vector2
 var enemies_in_range: Array[Node2D] = []
+
+var objective_label: Label
 
 # --- NODES ---
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
@@ -41,10 +46,15 @@ func _ready() -> void:
 	if Global.has_checkpoint == true:
 		global_position = Global.respawn_position
 		current_health = Global.player_health
+		reserve_ammo = Global.player_ammo
 	else:
 		current_health = max_health
-		start_movement_tutorial()
+		reserve_ammo = 30
+		Global.player_ammo = reserve_ammo
 		
+		if not Global.seen_movement_tutorial:
+			start_movement_tutorial()
+			
 	health_bar.max_value = max_health
 	health_bar.value = current_health
 	armor_bar.hide() 
@@ -267,6 +277,8 @@ func _on_inventory_changed() -> void:
 			$FlashlightPivot/Flashlight.visible = false
 			if has_node("AuraLight"):
 				$AuraLight.visible = true
+
+# --- AMMO HUD & LOGIC ---
 				
 func update_hud() -> void:
 	health_bar.value = current_health
@@ -285,7 +297,7 @@ func update_hud() -> void:
 			weapon_icon.show()
 		
 		if GlobalInventory.equipped_weapon == "Pistol":
-			weapon_label.text = "Equipped: Pistol | Ammo: " + str(current_ammo) + "/" + str(max_ammo)
+			weapon_label.text = "Equipped: Pistol | Ammo: " + str(current_ammo) + " / " + str(reserve_ammo)
 		else:
 			weapon_label.text = "Equipped: " + GlobalInventory.equipped_weapon
 			
@@ -297,16 +309,36 @@ func update_hud() -> void:
 func reload() -> void:
 	if is_reloading or current_ammo == max_ammo or current_weapon_prefix != "gun_":
 		return
+		
+	if reserve_ammo <= 0:
+		show_tutorial_message("Out of reserve ammo!", 2.0)
+		return
+		
 	is_reloading = true
 	print("Reloading...")
 	if weapon_label:
-		weapon_label.text = "Equipped: Pistol | Ammo: Reloading..."
+		weapon_label.text = "Equipped: Pistol | Reloading..."
+		
 	await get_tree().create_timer(reload_time).timeout
-	current_ammo = max_ammo
+	
+	var bullets_needed = max_ammo - current_ammo
+	var bullets_to_load = min(bullets_needed, reserve_ammo)
+	
+	current_ammo += bullets_to_load
+	reserve_ammo -= bullets_to_load
+	Global.player_ammo = reserve_ammo 
+	
 	is_reloading = false
 	print("Reload complete!")
 	update_hud()
-	
+
+func add_ammo(amount: int) -> void:
+	reserve_ammo += amount
+	Global.player_ammo = reserve_ammo
+	update_hud()
+
+# --- TUTORIALS & OBJECTIVES ---
+
 func setup_tutorial_label() -> void:
 	if not is_instance_valid(tutorial_label):
 		tutorial_label = Label.new()
@@ -319,6 +351,7 @@ func setup_tutorial_label() -> void:
 		tutorial_label.position.y = 100
 
 func start_movement_tutorial() -> void:
+	Global.seen_movement_tutorial = true 
 	tutorial_step = 1
 	setup_tutorial_label()
 	tutorial_label.text = "TUTORIAL: Use [W, A, S, D] to move."
@@ -378,4 +411,22 @@ func show_range_visual(weapon_type: String) -> void:
 		await get_tree().create_timer(5.0).timeout
 		if is_instance_valid(visual):
 			visual.queue_free()
-			
+
+func update_objective(new_text: String) -> void:
+	if not is_instance_valid(objective_label):
+		objective_label = Label.new()
+		objective_label.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+		objective_label.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+		objective_label.offset_top = 20
+		objective_label.offset_right = -20
+		
+		objective_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		objective_label.add_theme_font_size_override("font_size", 24)
+		objective_label.add_theme_color_override("font_color", Color(1, 0.8, 0.2)) 
+		objective_label.add_theme_color_override("font_outline_color", Color.BLACK)
+		objective_label.add_theme_constant_override("outline_size", 4)
+		
+		$UI.add_child(objective_label)
+		
+	objective_label.text = "Current Objective:\n" + new_text
+	objective_label.show()

@@ -317,8 +317,8 @@ colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_dw050"]
 gradient = SubResource("Gradient_1jxqw")
-width = 85
-height = 85
+width = 100
+height = 100
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 
@@ -371,16 +371,20 @@ position_smoothing_speed = 12.0
 
 [node name="AuraLight" type="PointLight2D" parent="." unique_id=1807096539]
 texture_filter = 1
+shadow_enabled = true
+shadow_filter = 2
 texture = SubResource("GradientTexture2D_dw050")
 
 [node name="FlashlightPivot" type="Node2D" parent="." unique_id=217371257]
-position = Vector2(0, 4)
 
 [node name="Flashlight" type="PointLight2D" parent="FlashlightPivot" unique_id=1630975353]
 visible = false
-position = Vector2(-7.999999, 91.00001)
+position = Vector2(-16.000006, -0.9999962)
 scale = Vector2(0.46603775, 0.33366534)
+shadow_enabled = true
+shadow_filter = 2
 texture = ExtResource("26_7hik5")
+offset = Vector2(0, 260)
 
 [node name="WeaponArea" type="Area2D" parent="." unique_id=918161000]
 

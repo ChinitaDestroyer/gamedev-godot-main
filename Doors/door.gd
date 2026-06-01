@@ -73,7 +73,16 @@ func toggle_door() -> void:
 		anim.play("open")
 		solid_collision.set_deferred("disabled", true)
 		prompt.text = "[E] Close"
+		
+		# --- THIS INSTANTLY LETS LIGHT THROUGH ---
+		if has_node("LightOccluder2D"):
+			$LightOccluder2D.hide()
+			
 	else:
 		anim.play("closed")
 		solid_collision.set_deferred("disabled", false)
 		prompt.text = "[E] Open"
+		
+		# --- THIS BLOCKS THE LIGHT AGAIN ---
+		if has_node("LightOccluder2D"):
+			$LightOccluder2D.show()

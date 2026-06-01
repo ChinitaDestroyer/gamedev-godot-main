@@ -23,6 +23,9 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_ud23n"]
+polygon = PackedVector2Array(-150, 120, -150, 154, -134, 154, -134, 137, 126, 138, 126, 155, 142, 155, 142, 120)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jgf3r"]
 size = Vector2(288, 65)
 
@@ -38,6 +41,9 @@ script = ExtResource("1_ud23n")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1997208626]
 sprite_frames = SubResource("SpriteFrames_8rcos")
 animation = &"closed"
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="." unique_id=713554716]
+occluder = SubResource("OccluderPolygon2D_ud23n")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=2086971753]
 

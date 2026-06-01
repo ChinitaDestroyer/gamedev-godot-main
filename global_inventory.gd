@@ -127,9 +127,17 @@ func restore_from_checkpoint() -> void:
 	weapon_equipped.emit(equipped_weapon)
 	inventory_updated.emit()
 
-func has_item(target_name: String) -> bool:
+func has_item(item_name: String) -> bool:
+	# 1. Check Passive/Equipped Gear First!
+	if equipped_armor == item_name:
+		return true
+	if equipped_weapon == item_name:
+		return true
+		
+	# 2. Check standard 6 inventory slots
 	for i in range(MAX_SLOTS):
 		var item = items[i]
-		if item != null and item["name"] == target_name:
-			return true
+		if item != null and item["name"] == item_name:
+			return true 
+			
 	return false

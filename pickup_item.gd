@@ -1,23 +1,17 @@
 extends Area2D
 
 @export var item_name: String = "Health Potion"
-@export_enum("consumable", "weapon", "key", "flashlight", "armor") var item_type: String = "consumable"
+@export_enum("consumable", "weapon", "key", "flashlight", "armor", "ammo") var item_type: String = "consumable"
 @export var item_value: int = 20
 
-# --- THE FIX: Added the missing unique_id export variable! ---
-@export var unique_id: String = "" 
-@export var completes_quest: String = ""
-
 @onready var prompt: Label = $Label
-@onready var sprite: Sprite2D = $Sprite2D
-
+@onready var sprite: Sprite2D = $Sprite2D 
 
 var can_interact: bool = false
 var player_ref: Node2D = null
 
 func _ready() -> void:
-	# --- THE FIX: Merged your auto-ID with the unique_ID cleanly ---
-	var my_id = unique_id if unique_id != "" else name + "_" + str(global_position)
+	var my_id = name + "_" + str(global_position)
 	
 	if my_id in Global.completed_events:
 		queue_free() 
@@ -40,29 +34,35 @@ func update_visuals() -> void:
 			sprite.texture = preload("res://asset ni oswel/key.png")
 		"armor":
 			sprite.texture = preload("res://PNG_items/items_0010_armor.png")
+		"ammo":
+			sprite.texture = preload("res://PNG_items/items_0003_magazine_gun.png")
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.name == "Player":
 		can_interact = true
-		player_ref = body 
+		player_ref = body
 		prompt.show()
-		
-		if not Global.seen_item_tutorial:
-			Global.seen_item_tutorial = true 
-			if body.has_method("show_tutorial_message"):
-				body.show_tutorial_message("TUTORIAL: Press [E] to pick up the item.", 4.0)
 
 func _on_body_exited(body: Node2D) -> void:
 	if body.name == "Player":
 		can_interact = false
-		player_ref = null 
+		player_ref = null
 		prompt.hide()
 
 func _input(event: InputEvent) -> void:
 	if can_interact and event.is_action_pressed("interact"):
 		get_viewport().set_input_as_handled()
 		
-		var my_id = unique_id if unique_id != "" else name + "_" + str(global_position)
+		var my_id = name + "_" + str(global_position)
+		
+		if item_type == "ammo":
+			if player_ref != null and player_ref.has_method("add_ammo"):
+				player_ref.add_ammo(item_value)
+				player_ref.show_tutorial_message("Picked up " + str(item_value) + " bullets!", 3.0)
+			
+			Global.completed_events.append(my_id)
+			queue_free()
+			return
 		
 		if item_type == "armor":
 			GlobalInventory.equipped_armor = item_name
@@ -79,9 +79,6 @@ func _input(event: InputEvent) -> void:
 		}
 		
 		if GlobalInventory.add_item(my_item_data):
-			if completes_quest != "":
-				Global.complete_quest(completes_quest)
-			
 			if player_ref != null and player_ref.has_method("show_tutorial_message"):
 				if item_type == "flashlight" and not Global.seen_flashlight_tutorial:
 					Global.seen_flashlight_tutorial = true
@@ -89,9 +86,6 @@ func _input(event: InputEvent) -> void:
 				elif not Global.seen_inventory_tutorial:
 					Global.seen_inventory_tutorial = true
 					player_ref.show_tutorial_message("TUTORIAL: Press [I] to open your inventory and equip items.", 5.0)
-			
-			if item_name == "Main Key":
-				Global.has_main_key = true
 			
 			Global.completed_events.append(my_id)
 			queue_free()
