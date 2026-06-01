@@ -23,7 +23,7 @@ var current_armor: int = 0
 # --- AMMO SYSTEM ---
 var max_ammo: int = 15
 var current_ammo: int = 15
-var reserve_ammo: int = 0
+var reserve_ammo: int = 30 
 var is_reloading: bool = false
 
 var tutorial_step: int = 0
@@ -49,7 +49,7 @@ func _ready() -> void:
 		reserve_ammo = Global.player_ammo
 	else:
 		current_health = max_health
-		reserve_ammo = 0
+		reserve_ammo = 30
 		Global.player_ammo = reserve_ammo
 		
 		if not Global.seen_movement_tutorial:
@@ -85,16 +85,25 @@ func _on_weapon_equipped(weapon_name: String) -> void:
 	update_hud()
 		
 func _on_armor_equipped(armor_name: String) -> void:
+	# --- NEW: Permanent Armor Visual Logic! ---
 	if armor_name == "Kevlar Vest": 
+		# You are actively wearing the vest (Full Protection)
 		current_armor_prefix = "armor_"
 		current_armor = max_armor
 		armor_bar.max_value = max_armor
 		armor_bar.value = current_armor
 		armor_bar.show()
+	elif "permanent_armor_outfit" in Global.completed_events:
+		# The vest broke, but you get to keep the outfit! (0 Protection)
+		current_armor_prefix = "armor_"
+		current_armor = 0
+		armor_bar.hide()
 	else:
+		# Default hospital gown state (0 Protection)
 		current_armor_prefix = ""
 		current_armor = 0
 		armor_bar.hide()
+	# ------------------------------------------
 
 func _physics_process(delta: float) -> void:
 	if is_dead:
@@ -139,6 +148,14 @@ func attack() -> void:
 		
 	is_attacking = true
 	var attack_anim_name = current_armor_prefix + current_weapon_prefix + "attack"
+	
+	# Failsafe for missing animations
+	if anim.sprite_frames != null and not anim.sprite_frames.has_animation(attack_anim_name):
+		print("WARNING: Missing animation '", attack_anim_name, "'. Borrowing armored version!")
+		attack_anim_name = "armor_" + current_weapon_prefix + "attack"
+		if not anim.sprite_frames.has_animation(attack_anim_name):
+			attack_anim_name = "idle" 
+			
 	anim.play(attack_anim_name)
 	perform_attack()
 	
@@ -161,10 +178,21 @@ func handle_movement(delta: float) -> void:
 func handle_animation() -> void:
 	var final_anim = current_armor_prefix + current_weapon_prefix
 	
+	var target_anim = ""
 	if input_dir == Vector2.ZERO:
-		anim.play(final_anim + "idle")
+		target_anim = final_anim + "idle"
 	else:
-		anim.play(final_anim + "walk")
+		target_anim = final_anim + "walk"
+		
+	# Failsafe for missing animations
+	if anim.sprite_frames != null and not anim.sprite_frames.has_animation(target_anim):
+		var fallback = "armor_" + current_weapon_prefix + ("idle" if input_dir == Vector2.ZERO else "walk")
+		if anim.sprite_frames.has_animation(fallback):
+			target_anim = fallback
+		else:
+			target_anim = "idle"
+			
+	anim.play(target_anim)
 		
 	var mouse_pos = get_global_mouse_position()
 	var aim_direction = global_position.direction_to(mouse_pos)
@@ -198,7 +226,7 @@ func perform_attack() -> void:
 			var target = gun_raycast.get_collider()
 			if target.has_method("take_damage"):
 				print("Headshot! Dealt massive damage!")
-				target.take_damage(20) 
+				target.take_damage(25) 
 		else:
 			print("You shot into the empty distance!")
 			
@@ -206,15 +234,13 @@ func perform_attack() -> void:
 			reload()
 
 func take_damage(damage_amount: int) -> void:
-	# --- NEW: Red Damage Flash Effect ---
 	var tween = create_tween()
-	anim.modulate = Color(1.0, 0.0, 0.0) # Instantly turn Red
-	tween.tween_property(anim, "modulate", Color(1.0, 1.0, 1.0), 0.3) # Fade back to normal over 0.3 seconds
-	# ------------------------------------
-	
+	anim.modulate = Color(1.0, 0.0, 0.0) 
+	tween.tween_property(anim, "modulate", Color(1.0, 1.0, 1.0), 0.3) 
+
 	if current_armor > 0:
 		current_armor -= damage_amount
-		if current_armor < 0:
+		if current_armor <= 0: # <-- Fixed to <= 0 so it accurately breaks!
 			var spillover_damage = abs(current_armor) 
 			current_armor = 0
 			current_health -= spillover_damage 
@@ -234,8 +260,23 @@ func take_damage(damage_amount: int) -> void:
 
 func break_armor() -> void:
 	print("The Kevlar Vest was destroyed!")
+	
+	# --- NEW: Add the permanent visual marker to memory! ---
+	if not "permanent_armor_outfit" in Global.completed_events:
+		Global.completed_events.append("permanent_armor_outfit")
+		
+	# Delete the broken item from our backpack so it's gone mechanically
+	for i in range(GlobalInventory.MAX_SLOTS):
+		var item = GlobalInventory.items[i]
+		if item != null and item["name"] == GlobalInventory.equipped_armor:
+			GlobalInventory.items[i] = null
+			break
+			
+	# Update the UI and officially trigger the re-equip logic
 	GlobalInventory.equipped_armor = ""
-	GlobalInventory.armor_equipped.emit("")
+	GlobalInventory.inventory_updated.emit()
+	GlobalInventory.armor_equipped.emit("") 
+	# -------------------------------------------------------
 
 func die() -> void:
 	if is_dead:

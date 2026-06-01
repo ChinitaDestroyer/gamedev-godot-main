@@ -209,14 +209,14 @@ func die() -> void:
 # --- NEW: LOOT DROP SYSTEM ---
 func drop_loot() -> void:
 	# Keep this at 1.0 for testing, change to 0.5 later!
-	if randf() <= 1.0: 
+	if randf() <= .5: 
 		print("Zombie dropped ammo!")
 		
 		var drop = PICKUP_SCENE.instantiate()
 		
-		drop.item_name = "Ammo"
+		drop.item_name = "Pistol Ammo"
 		drop.item_type = "ammo"
-		drop.item_value = randi_range(5, 15) 
+		drop.item_value = randi_range(5, 10) 
 		drop.name = "DroppedAmmo_" + str(randi())
 		
 		# FIX 1: Force the item to render on TOP of the dead zombie corpse
