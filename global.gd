@@ -4,7 +4,7 @@ var respawn_position: Vector2
 var has_checkpoint: bool = false
 var current_scene_path: String = ""
 var player_health: int = 100
-var player_ammo: int = 30
+var player_ammo: int = 0
 
 var completed_events: Array[String] = []
 var checkpoint_events: Array[String] = []
@@ -81,7 +81,7 @@ func load_game() -> bool:
 	has_checkpoint = save_data["has_checkpoint"]
 	respawn_position = Vector2(save_data["respawn_x"], save_data["respawn_y"])
 	player_health = save_data.get("player_health", 100)
-	player_ammo = save_data.get("player_ammo", 30)
+	player_ammo = save_data.get("player_ammo", 0)
 	
 	GlobalInventory.checkpoint_weapons.assign(save_data.get("safe_weapons", []))
 	GlobalInventory.checkpoint_items = save_data.get("safe_items", [])

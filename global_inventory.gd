@@ -106,6 +106,10 @@ func save_to_checkpoint() -> void:
 	checkpoint_weapons = current_weapons.duplicate()
 	checkpoint_items = items.duplicate(true)
 	checkpoint_equipped_weapon = equipped_weapon
+	
+	# --- ADDED: Memorize the armor! ---
+	checkpoint_equipped_armor = equipped_armor 
+	
 	print("Inventory saved to checkpoint! Safe items: ", checkpoint_weapons)
 
 func restore_from_checkpoint() -> void:
@@ -125,6 +129,11 @@ func restore_from_checkpoint() -> void:
 		
 	equipped_weapon = checkpoint_equipped_weapon
 	weapon_equipped.emit(equipped_weapon)
+	
+	# --- ADDED: Restore the armor and tell the player to put it on! ---
+	equipped_armor = checkpoint_equipped_armor
+	armor_equipped.emit(equipped_armor)
+	
 	inventory_updated.emit()
 
 func has_item(item_name: String) -> bool:

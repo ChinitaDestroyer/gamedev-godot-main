@@ -4,10 +4,11 @@ extends CharacterBody2D
 @export var chase_speed: float = 120.0
 
 var current_state: String = "ROAM"
+
 @export var roam_direction: Vector2 = Vector2.RIGHT
 @export var attack_damage: int = 20
 @export var max_health: int = 100
-
+const PICKUP_SCENE = preload("res://pickup_item.tscn")
 
 # --- NEW: Replaced the math distance with our Hitbox variable ---
 var player_in_attack_range: bool = false
@@ -18,6 +19,7 @@ var initial_position: Vector2
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 @onready var roam_timer: Timer = $RoamTimer
 @onready var detection_area: Area2D = $DetectionArea
+
 
 func _ready() -> void:
 	initial_position = global_position 
@@ -188,6 +190,9 @@ func die() -> void:
 	if not already_saved:
 		Global.completed_events.append(save_string)
 		
+		# --- NEW: Roll the dice for loot on a fresh kill! ---
+		drop_loot()
+		
 	# 3. The rest of your normal death logic
 	current_state = "DEATH"
 	velocity = Vector2.ZERO 
@@ -200,4 +205,27 @@ func die() -> void:
 		
 	z_index = 0
 	anim.play("death")
+
+# --- NEW: LOOT DROP SYSTEM ---
+func drop_loot() -> void:
+	# Keep this at 1.0 for testing, change to 0.5 later!
+	if randf() <= 1.0: 
+		print("Zombie dropped ammo!")
+		
+		var drop = PICKUP_SCENE.instantiate()
+		
+		drop.item_name = "Ammo"
+		drop.item_type = "ammo"
+		drop.item_value = randi_range(5, 15) 
+		drop.name = "DroppedAmmo_" + str(randi())
+		
+		# FIX 1: Force the item to render on TOP of the dead zombie corpse
+		drop.z_index = 5 
+		
+		var level = get_tree().current_scene
+		level.call_deferred("add_child", drop)
+		
+		# FIX 2: Set the position AFTER it is safely added to the tree, 
+		# preventing it from teleporting to the top-left of the map!
+		drop.set_deferred("global_position", global_position)
 		

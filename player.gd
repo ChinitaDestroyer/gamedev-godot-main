@@ -23,7 +23,7 @@ var current_armor: int = 0
 # --- AMMO SYSTEM ---
 var max_ammo: int = 15
 var current_ammo: int = 15
-var reserve_ammo: int = 30 
+var reserve_ammo: int = 0
 var is_reloading: bool = false
 
 var tutorial_step: int = 0
@@ -49,7 +49,7 @@ func _ready() -> void:
 		reserve_ammo = Global.player_ammo
 	else:
 		current_health = max_health
-		reserve_ammo = 30
+		reserve_ammo = 0
 		Global.player_ammo = reserve_ammo
 		
 		if not Global.seen_movement_tutorial:
