@@ -163,6 +163,12 @@ func take_damage(damage_amount: int) -> void:
 	current_health -= damage_amount
 	print("Take that! Zombie health is now: ", current_health)
 	
+	# --- NEW: Red Damage Flash Effect ---
+	var tween = create_tween()
+	anim.modulate = Color(1.0, 0.0, 0.0) # Instantly turn Red
+	tween.tween_property(anim, "modulate", Color(1.0, 1.0, 1.0), 0.3) # Fade back to normal over 0.3 seconds
+	# ------------------------------------
+	
 	# Did we just strike the killing blow?
 	if current_health <= 0:
 		die()
