@@ -3,6 +3,7 @@ extends Node
 signal inventory_updated
 signal weapon_equipped(weapon_name: String)
 signal armor_equipped(armor_name: String)
+signal consumable_used(heal_amount: int)
 
 var current_weapons: Array[String] = [] 
 var checkpoint_weapons: Array[String] = []
@@ -41,7 +42,11 @@ func use_item(slot_index: int) -> void:
 	
 	if item["type"] == "consumable":
 		print("You drank the ", item["name"], "! Healed for ", item["value"])
-		items[slot_index] = null 
+		
+		# --- THE FIX: Broadcast the heal amount to the game! ---
+		consumable_used.emit(item["value"]) 
+		
+		items[slot_index] = null
 		
 	elif item["type"] == "weapon":
 		if equipped_weapon == item["name"]:

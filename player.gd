@@ -67,6 +67,8 @@ func _ready() -> void:
 	GlobalInventory.armor_equipped.connect(_on_armor_equipped)
 	_on_armor_equipped(GlobalInventory.equipped_armor)
 	
+	GlobalInventory.consumable_used.connect(heal)
+	
 func _on_weapon_equipped(weapon_name: String) -> void:
 	if weapon_name == "Knife":
 		current_weapon_prefix = "knife_"
@@ -488,3 +490,21 @@ func update_objective(new_text: String) -> void:
 		
 	objective_label.text = "Current Objective:\n" + new_text
 	objective_label.show()
+	
+func heal(amount: int) -> void:
+	# Add the health
+	current_health += amount
+	
+	# Failsafe: Don't let health go over the maximum!
+	if current_health > max_health:
+		current_health = max_health
+		
+	# Update the UI bar
+	health_bar.value = current_health
+	
+	print("Player healed! Health is now: ", current_health)
+	
+	# Optional: Give a green visual flash to show they healed!
+	var tween = create_tween()
+	anim.modulate = Color(0.0, 1.0, 0.0) # Flash green
+	tween.tween_property(anim, "modulate", Color(1.0, 1.0, 1.0), 0.3)

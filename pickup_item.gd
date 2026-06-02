@@ -36,6 +36,8 @@ func update_visuals() -> void:
 			sprite.texture = preload("res://PNG_items/items_0010_armor.png")
 		"ammo":
 			sprite.texture = preload("res://PNG_items/items_0003_magazine_gun.png")
+		"consumable":
+			sprite.texture = preload("res://PNG_items/items_0005_health.png")
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.name == "Player":
