@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://4n0nr3v0ao1f" path="res://last_round_asset_use/Tiles/merged_tiles.png" id="1_ysqta"]
 [ext_resource type="Texture2D" uid="uid://bhqom4khbm705" path="res://last_round_asset_use/hospital_outside1.png" id="2_ysqta"]
 [ext_resource type="Texture2D" uid="uid://b8bulrhyb7my2" path="res://last_round_asset_use/playgroundehe.png" id="4_5pd24"]
+[ext_resource type="PackedScene" uid="uid://bu8houh860gy3" path="res://zombie.tscn" id="5_s6855"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_s6855"]
 texture = ExtResource("1_yn2l2")
@@ -18133,3 +18134,132 @@ scale = Vector2(0.29552627, 0.2955263)
 texture = ExtResource("4_5pd24")
 region_enabled = true
 region_rect = Rect2(337.1161, 138.52524, 2042.007, 1132.2019)
+
+[node name="Zombie" parent="." unique_id=1244593536 instance=ExtResource("5_s6855")]
+position = Vector2(453.99997, 1105.6)
+
+[node name="Zombie2" parent="." unique_id=31652359 instance=ExtResource("5_s6855")]
+position = Vector2(228.99998, 1207.2)
+
+[node name="Zombie3" parent="." unique_id=558648670 instance=ExtResource("5_s6855")]
+position = Vector2(627.6, 1220.6)
+
+[node name="Zombie4" parent="." unique_id=253968231 instance=ExtResource("5_s6855")]
+position = Vector2(-279.99997, 462.19998)
+
+[node name="Zombie5" parent="." unique_id=1291406292 instance=ExtResource("5_s6855")]
+position = Vector2(356.19998, 430.39996)
+
+[node name="Zombie6" parent="." unique_id=242444769 instance=ExtResource("5_s6855")]
+position = Vector2(-304.4, 189.59999)
+
+[node name="Zombie7" parent="." unique_id=313551201 instance=ExtResource("5_s6855")]
+position = Vector2(335.4, 207.79999)
+
+[node name="Zombie8" parent="." unique_id=152966621 instance=ExtResource("5_s6855")]
+position = Vector2(-256.59998, 697.19995)
+
+[node name="Zombie9" parent="." unique_id=261651192 instance=ExtResource("5_s6855")]
+position = Vector2(459.99997, 657.99994)
+
+[node name="Zombie10" parent="." unique_id=598863345 instance=ExtResource("5_s6855")]
+position = Vector2(82.2, 721.6)
+
+[node name="Zombie11" parent="." unique_id=1989928299 instance=ExtResource("5_s6855")]
+position = Vector2(-339.8, 1220.6)
+
+[node name="Zombie12" parent="." unique_id=1386918476 instance=ExtResource("5_s6855")]
+position = Vector2(-295.8, 1583.9999)
+
+[node name="Zombie13" parent="." unique_id=1867828226 instance=ExtResource("5_s6855")]
+position = Vector2(129.79999, 1418.7999)
+
+[node name="Zombie14" parent="." unique_id=2138888017 instance=ExtResource("5_s6855")]
+position = Vector2(210.59999, 1769.7999)
+
+[node name="Zombie15" parent="." unique_id=824329948 instance=ExtResource("5_s6855")]
+position = Vector2(1129.2, 1312.3999)
+
+[node name="Zombie16" parent="." unique_id=1502503842 instance=ExtResource("5_s6855")]
+position = Vector2(1253.9999, 1944.7999)
+
+[node name="Zombie17" parent="." unique_id=445738078 instance=ExtResource("5_s6855")]
+position = Vector2(1114.3999, 1632.7999)
+
+[node name="Zombie18" parent="." unique_id=1845482489 instance=ExtResource("5_s6855")]
+position = Vector2(639.8, 1996.1998)
+
+[node name="Zombie19" parent="." unique_id=1007506263 instance=ExtResource("5_s6855")]
+position = Vector2(-783.7999, 1975.3999)
+
+[node name="Zombie20" parent="." unique_id=185686377 instance=ExtResource("5_s6855")]
+position = Vector2(307.19998, 1994.9999)
+
+[node name="Zombie21" parent="." unique_id=1177006875 instance=ExtResource("5_s6855")]
+position = Vector2(-321.59998, 1988.7999)
+
+[node name="Zombie22" parent="." unique_id=925007070 instance=ExtResource("5_s6855")]
+position = Vector2(-518.39996, 2400.9998)
+
+[node name="Zombie23" parent="." unique_id=676318568 instance=ExtResource("5_s6855")]
+position = Vector2(-539.19995, 3151.9998)
+
+[node name="Zombie24" parent="." unique_id=62528142 instance=ExtResource("5_s6855")]
+position = Vector2(-810.7999, 3085.9998)
+
+[node name="Zombie25" parent="." unique_id=259995003 instance=ExtResource("5_s6855")]
+position = Vector2(-687.19995, 2761.7998)
+
+[node name="Zombie26" parent="." unique_id=499366995 instance=ExtResource("5_s6855")]
+position = Vector2(-517.19995, 2656.5999)
+
+[node name="Zombie27" parent="." unique_id=127756446 instance=ExtResource("5_s6855")]
+position = Vector2(-639.6, 2118.4)
+
+[node name="Zombie28" parent="." unique_id=2008791001 instance=ExtResource("5_s6855")]
+position = Vector2(-157.99998, 169.59999)
+
+[node name="Zombie29" parent="." unique_id=411007679 instance=ExtResource("5_s6855")]
+position = Vector2(168.59999, 157.79999)
+
+[node name="Zombie30" parent="." unique_id=2040447745 instance=ExtResource("5_s6855")]
+position = Vector2(82.799995, 453.39996)
+
+[node name="Zombie31" parent="." unique_id=801342069 instance=ExtResource("5_s6855")]
+position = Vector2(244.79999, 589.19995)
+
+[node name="Zombie32" parent="." unique_id=1995898918 instance=ExtResource("5_s6855")]
+position = Vector2(-389.19998, 601.19995)
+
+[node name="Zombie33" parent="." unique_id=1747249246 instance=ExtResource("5_s6855")]
+position = Vector2(523.8, 949.19995)
+
+[node name="Zombie34" parent="." unique_id=1929178516 instance=ExtResource("5_s6855")]
+position = Vector2(945.5999, 1187.3999)
+
+[node name="Zombie35" parent="." unique_id=313002589 instance=ExtResource("5_s6855")]
+position = Vector2(1231.6, 1509.2)
+
+[node name="Zombie36" parent="." unique_id=1776381305 instance=ExtResource("5_s6855")]
+position = Vector2(1207.7999, 1182.7999)
+
+[node name="Zombie37" parent="." unique_id=679885953 instance=ExtResource("5_s6855")]
+position = Vector2(-186.59999, 1394.7999)
+
+[node name="Zombie38" parent="." unique_id=399664907 instance=ExtResource("5_s6855")]
+position = Vector2(-229.4, 1101.6)
+
+[node name="Zombie39" parent="." unique_id=513031271 instance=ExtResource("5_s6855")]
+position = Vector2(1033.7999, 1873.9999)
+
+[node name="Zombie40" parent="." unique_id=455231713 instance=ExtResource("5_s6855")]
+position = Vector2(1441.3999, 1912.1998)
+
+[node name="Zombie41" parent="." unique_id=1928043202 instance=ExtResource("5_s6855")]
+position = Vector2(778.7999, 1885.7999)
+
+[node name="Zombie42" parent="." unique_id=888887117 instance=ExtResource("5_s6855")]
+position = Vector2(1.8, 1914.5999)
+
+[node name="Zombie43" parent="." unique_id=733873911 instance=ExtResource("5_s6855")]
+position = Vector2(526.19995, 1857.1998)
