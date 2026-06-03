@@ -3,6 +3,7 @@ extends Area2D
 @export var item_name: String = "Health Potion"
 @export_enum("consumable", "weapon", "key", "flashlight", "armor", "ammo") var item_type: String = "consumable"
 @export var item_value: int = 20
+@export var completes_quest: String = ""
 
 @onready var prompt: Label = $Label
 @onready var sprite: Sprite2D = $Sprite2D 
@@ -56,6 +57,9 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		
 		var my_id = name + "_" + str(global_position)
+		
+		if completes_quest != "":
+			Global.complete_quest(completes_quest)
 		
 		if item_type == "ammo":
 			if player_ref != null and player_ref.has_method("add_ammo"):

@@ -8,6 +8,7 @@ var current_state: String = "ROAM"
 @export var roam_direction: Vector2 = Vector2.RIGHT
 @export var attack_damage: int = 20
 @export var max_health: int = 100
+@export var can_drop_loot: bool = false # Defaults to false so Round 1 zombies drop nothing!
 const PICKUP_SCENE = preload("res://pickup_item.tscn")
 
 # --- NEW: Replaced the math distance with our Hitbox variable ---
@@ -19,6 +20,7 @@ var initial_position: Vector2
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 @onready var roam_timer: Timer = $RoamTimer
 @onready var detection_area: Area2D = $DetectionArea
+
 
 
 func _ready() -> void:
@@ -206,8 +208,13 @@ func die() -> void:
 	z_index = 0
 	anim.play("death")
 
-# --- NEW: LOOT DROP SYSTEM ---
 func drop_loot() -> void:
+	
+	# --- THE FIX: Stop here if this zombie isn't allowed to drop items! ---
+	if can_drop_loot == false:
+		return 
+	# ----------------------------------------------------------------------
+		
 	# Keep this at 1.0 for testing, change to 0.5 later!
 	if randf() <= .5: 
 		print("Zombie dropped ammo!")
