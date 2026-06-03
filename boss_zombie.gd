@@ -1,44 +1,63 @@
 extends CharacterBody2D
 
 @export var roam_speed: float = 40.0
-@export var base_chase_speed: float = 120.0
-@export var enraged_chase_speed: float = 220.0 # SUPER FAST!
-@export var attack_damage: int = 45
-@export var max_health: int = 500
-@export var is_boss_holding_key: bool = true # Always true for the boss
+@export var chase_speed: float = 120.0
 
 var current_state: String = "ROAM"
-var roam_direction: Vector2 = Vector2.RIGHT
+
+@export var roam_direction: Vector2 = Vector2.RIGHT
+@export var attack_damage: int = 20
+@export var max_health: int = 500
+const PICKUP_SCENE = preload("res://pickup_item.tscn")
+
+# --- BOSS SETTINGS ---
+@export_category("Boss Settings")
+@export var is_boss: bool = false
+@export var is_boss_holding_key: bool = false
+@export var enraged_chase_speed: float = 220.0
+
+var is_enraged: bool = false
+var current_chase_speed: float = 0.0
+
+# --- NEW: Replaced the math distance with our Hitbox variable ---
 var player_in_attack_range: bool = false
 var current_health: int = max_health
 var player_ref: Node2D = null
 var initial_position: Vector2
 
-# --- NEW: Boss Mechanics ---
-var is_enraged: bool = false
-var current_chase_speed: float = base_chase_speed
-
-const PICKUP_SCENE = preload("res://pickup_item.tscn")
-
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 @onready var roam_timer: Timer = $RoamTimer
 @onready var detection_area: Area2D = $DetectionArea
 
+
 func _ready() -> void:
 	initial_position = global_position 
+	current_chase_speed = chase_speed # Set the baseline speed
 	var base_id = name + "_" + str(initial_position)
 	
+	# Check our global list to see if this specific zombie is dead
 	for event in Global.completed_events:
 		if event.begins_with(base_id):
+			
+			# We found our death certificate! Split it at the "|" symbol
 			var parts = event.split("|")
 			if parts.size() > 1:
+				# Apply the exact rotation we had when we died
 				anim.rotation = float(parts[1])
+			
+			# Turn into a corpse
 			die() 
+			
+			# --- BONUS FIX: Fast-forward to the end of the death animation! ---
+			# This stops the corpse from re-playing the falling animation on reload
 			var last_frame = anim.sprite_frames.get_frame_count("death") - 1
 			anim.frame = last_frame
-			return 
+			
+			return # Stop reading _ready()
 
 func _physics_process(_delta: float) -> void:
+	# 1. State Logic
+		
 	if current_state == "DEATH":
 		return
 
@@ -46,26 +65,40 @@ func _physics_process(_delta: float) -> void:
 		velocity = roam_direction * roam_speed
 		
 	elif current_state == "CHASE" and player_ref != null:
+		# --- NEW: Using the Area2D Hitbox instead of Math! ---
 		if player_in_attack_range:
+			# Player touched our attack circle, swing!
 			start_attack()
 		else:
+			# Player is out of reach, keep running at them
 			var direction = global_position.direction_to(player_ref.global_position)
-			velocity = direction * current_chase_speed
+			# --- UPDATED: Uses dynamic chase speed for the boss enrage ---
+			velocity = direction * current_chase_speed 
 			
 	elif current_state == "ATTACK":
+		# Freeze the zombie in place while the attack animation plays
 		velocity = Vector2.ZERO
 
+	# 2. Visuals (Top-Down Rotation)
 	if current_state != "ATTACK":
 		if velocity != Vector2.ZERO:
 			anim.play("walk")
 			anim.rotation = velocity.angle() - (PI / 2.0)
+			
 			if detection_area:
 				detection_area.rotation = velocity.angle() - (PI / 2.0)
 		else:
 			anim.play("idle")
 
+	# 3. Move
 	move_and_slide()
+	
+	# --- WALL BOUNCE FIX: Instantly turn around if we bump into a wall! ---
+	if current_state == "ROAM" and is_on_wall():
+		roam_direction = roam_direction * -1
 
+
+# --- ATTACK LOGIC ---
 func start_attack() -> void:
 	current_state = "ATTACK"
 	velocity = Vector2.ZERO 
@@ -73,33 +106,93 @@ func start_attack() -> void:
 	if player_ref != null:
 		var direction_to_player = global_position.direction_to(player_ref.global_position)
 		anim.rotation = direction_to_player.angle() - (PI / 2.0)
+		
+		# Swing the vision box to face the player while attacking
 		if detection_area:
 			detection_area.rotation = anim.rotation 
 			
+		# --- NEW: Deal the damage! ---
+		# We use has_method just to be 100% safe so the game doesn't crash
 		if player_ref.has_method("take_damage"):
 			player_ref.take_damage(attack_damage)
 		
 	anim.play("attack")
 
+
+# --- SIGNALS ---
+func _on_roam_timer_timeout() -> void:
+	if current_state == "ROAM":
+		roam_direction = roam_direction * -1
+
+func _on_detection_area_body_entered(body: Node2D) -> void:
+	if body.name == "Player":
+		current_state = "CHASE"
+		player_ref = body
+
+func _on_detection_area_body_exited(body: Node2D) -> void:
+	# --- NEW: If the zombie is dead, ignore this completely! ---
+	if current_state == "DEATH":
+		return
+
+	if body.name == "Player":
+		player_ref = null
+		
+		# Only go back to ROAM instantly if we aren't mid-swing
+		if current_state != "ATTACK":
+			current_state = "ROAM"
+			reset_patrol_direction()
+
+func _on_animated_sprite_2d_animation_finished() -> void:
+	if anim.animation == "attack":
+		if player_ref != null:
+			current_state = "CHASE"
+		else:
+			current_state = "ROAM"
+			reset_patrol_direction()
+
+# --- NEW HITBOX SIGNALS ---
+func _on_attack_area_body_entered(body: Node2D) -> void:
+	if body.name == "Player":
+		player_in_attack_range = true
+
+func _on_attack_area_body_exited(body: Node2D) -> void:
+	if body.name == "Player":
+		player_in_attack_range = false
+
+
+# --- HELPER ---
+func reset_patrol_direction() -> void:
+	var reset_dir = velocity.normalized()
+	
+	if abs(reset_dir.x) > abs(reset_dir.y):
+		roam_direction = Vector2(sign(reset_dir.x), 0) 
+	else:
+		roam_direction = Vector2(0, sign(reset_dir.y)) 
+		
+	if roam_direction == Vector2.ZERO:
+		roam_direction = Vector2.RIGHT
+		
 func take_damage(damage_amount: int) -> void:
+	# Ignore damage if we are already dead
 	if current_state == "DEATH":
 		return
 		
 	current_health -= damage_amount
-	print("Boss health is now: ", current_health)
+	print("Take that! Zombie health is now: ", current_health)
 	
-	# --- NEW: Phase 2 Enrage Logic ---
-	if current_health <= (max_health / 2) and not is_enraged:
+	# --- BOSS ENRAGE LOGIC ---
+	if is_boss and current_health <= (max_health / 2.0) and not is_enraged:
 		trigger_enrage()
-	# ---------------------------------
 	
+	# --- DAMAGE VISUALS ---
 	var tween = create_tween()
-	anim.modulate = Color(1.0, 0.0, 0.0) 
+	anim.modulate = Color(1.0, 0.0, 0.0) # Instantly turn Red
 	
-	# If enraged, fade back to dark red. Otherwise, fade back to normal.
+	# If it's an enraged boss, return to dark red. Otherwise, normal color.
 	var return_color = Color(0.6, 0.0, 0.0) if is_enraged else Color(1.0, 1.0, 1.0)
 	tween.tween_property(anim, "modulate", return_color, 0.3) 
 	
+	# Did we just strike the killing blow?
 	if current_health <= 0:
 		die()
 
@@ -107,19 +200,16 @@ func take_damage(damage_amount: int) -> void:
 func trigger_enrage() -> void:
 	is_enraged = true
 	current_chase_speed = enraged_chase_speed
-	
-	# Visual cue that the boss is mad!
 	anim.modulate = Color(0.6, 0.0, 0.0) # Permanently tint dark red
-	
-	# Make it hit even harder in Phase 2
-	attack_damage = 65 
-	
+	attack_damage += 15 # Boss hits harder in phase 2!
 	print("THE BOSS IS ENRAGED!")
 
 func die() -> void:
+	# 1. Create the base ID and grab the current rotation
 	var base_id = name + "_" + str(initial_position)
 	var save_string = base_id + "|" + str(anim.rotation)
 	
+	# 2. Check if we already saved this death to avoid duplicates
 	var already_saved = false
 	for event in Global.completed_events:
 		if event.begins_with(base_id):
@@ -128,8 +218,11 @@ func die() -> void:
 			
 	if not already_saved:
 		Global.completed_events.append(save_string)
+		
+		# --- NEW: Roll the dice for loot on a fresh kill! ---
 		drop_loot()
 		
+	# 3. The rest of your normal death logic
 	current_state = "DEATH"
 	velocity = Vector2.ZERO 
 	
@@ -142,58 +235,41 @@ func die() -> void:
 	z_index = 0
 	anim.play("death")
 
+# --- NEW: LOOT DROP SYSTEM ---
 func drop_loot() -> void:
+	
+	# --- BOSS KEY DROP ---
 	if is_boss_holding_key:
 		print("Boss killed! Dropping the Exit Key!")
 		var drop = PICKUP_SCENE.instantiate()
-		
 		drop.item_name = "Exit Key"
 		drop.item_type = "key"
 		drop.name = "DroppedKey_Boss" 
-		
 		drop.z_index = 5 
 		
 		var level = get_tree().current_scene
 		level.call_deferred("add_child", drop)
 		drop.set_deferred("global_position", global_position)
-
-# --- STANDARD SIGNALS ---
-func _on_roam_timer_timeout() -> void:
-	if current_state == "ROAM":
-		roam_direction = roam_direction * -1
+		return # Stop execution here so it doesn't also drop normal ammo!
+	
+	# --- NORMAL AMMO DROP ---
+	# Keep this at 1.0 for testing, change to 0.5 later!
+	if randf() <= .5: 
+		print("Zombie dropped ammo!")
 		
-	var reset_dir = velocity.normalized()
-	if abs(reset_dir.x) > abs(reset_dir.y):
-		roam_direction = Vector2(sign(reset_dir.x), 0) 
-	else:
-		roam_direction = Vector2(0, sign(reset_dir.y)) 
-	if roam_direction == Vector2.ZERO:
-		roam_direction = Vector2.RIGHT
-
-func _on_detection_area_body_entered(body: Node2D) -> void:
-	if body.is_in_group("player") or body.name == "Player":
-		current_state = "CHASE"
-		player_ref = body
-
-func _on_detection_area_body_exited(body: Node2D) -> void:
-	if current_state == "DEATH":
-		return
-	if body.is_in_group("player") or body.name == "Player":
-		player_ref = null
-		if current_state != "ATTACK":
-			current_state = "ROAM"
-
-func _on_animated_sprite_2d_animation_finished() -> void:
-	if anim.animation == "attack":
-		if player_ref != null:
-			current_state = "CHASE"
-		else:
-			current_state = "ROAM"
-
-func _on_attack_area_body_entered(body: Node2D) -> void:
-	if body.is_in_group("player") or body.name == "Player":
-		player_in_attack_range = true
-
-func _on_attack_area_body_exited(body: Node2D) -> void:
-	if body.is_in_group("player") or body.name == "Player":
-		player_in_attack_range = false
+		var drop = PICKUP_SCENE.instantiate()
+		
+		drop.item_name = "Pistol Ammo"
+		drop.item_type = "ammo"
+		drop.item_value = randi_range(5, 10) 
+		drop.name = "DroppedAmmo_" + str(randi())
+		
+		# FIX 1: Force the item to render on TOP of the dead zombie corpse
+		drop.z_index = 5 
+		
+		var level = get_tree().current_scene
+		level.call_deferred("add_child", drop)
+		
+		# FIX 2: Set the position AFTER it is safely added to the tree, 
+		# preventing it from teleporting to the top-left of the map!
+		drop.set_deferred("global_position", global_position)

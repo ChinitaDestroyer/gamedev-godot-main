@@ -50,14 +50,12 @@ occluder = SubResource("OccluderPolygon2D_qvhre")
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=2086971753]
 
 [node name="SolidCollision" type="CollisionShape2D" parent="StaticBody2D" unique_id=1317751684]
-visible = false
 position = Vector2(-4, 130.5)
 shape = SubResource("RectangleShape2D_jgf3r")
 
 [node name="Area2D" type="Area2D" parent="." unique_id=1614146998]
 
 [node name="TriggerCollision" type="CollisionShape2D" parent="Area2D" unique_id=1249731260]
-visible = false
 position = Vector2(-4, 132.5)
 shape = SubResource("RectangleShape2D_g0qkb")
 
