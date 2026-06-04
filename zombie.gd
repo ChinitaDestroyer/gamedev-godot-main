@@ -20,6 +20,12 @@ var initial_position: Vector2
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 @onready var roam_timer: Timer = $RoamTimer
 @onready var detection_area: Area2D = $DetectionArea
+@onready var vision_raycast: RayCast2D = $VisionRayCast
+@onready var alert_sfx: AudioStreamPlayer = $AlertSound
+@onready var attack_sfx: AudioStreamPlayer = $AttackSound
+@onready var hurt_sfx: AudioStreamPlayer = $HurtSound
+@onready var death_sfx: AudioStreamPlayer = $DeathSound
+
 
 
 
@@ -38,7 +44,7 @@ func _ready() -> void:
 				anim.rotation = float(parts[1])
 			
 			# Turn into a corpse
-			die() 
+			die(false) 
 			
 			# --- BONUS FIX: Fast-forward to the end of the death animation! ---
 			# This stops the corpse from re-playing the falling animation on reload
@@ -57,14 +63,30 @@ func _physics_process(_delta: float) -> void:
 		velocity = roam_direction * roam_speed
 		
 	elif current_state == "CHASE" and player_ref != null:
-		# --- NEW: Using the Area2D Hitbox instead of Math! ---
-		if player_in_attack_range:
-			# Player touched our attack circle, swing!
-			start_attack()
+		
+		# 1. Shoot the invisible laser exactly at the player's position
+		vision_raycast.target_position = to_local(player_ref.global_position)
+		vision_raycast.force_raycast_update()
+		
+		# 2. Check if the laser hit a wall instead of the player
+		var is_blocked_by_wall = false
+		if vision_raycast.is_colliding():
+			var object_hit = vision_raycast.get_collider()
+			if object_hit != player_ref:
+				is_blocked_by_wall = true
+				
+		# 3. Decide what to do!
+		if is_blocked_by_wall:
+			current_state = "ROAM"
+			player_ref = null
+			reset_patrol_direction()
 		else:
-			# Player is out of reach, keep running at them
-			var direction = global_position.direction_to(player_ref.global_position)
-			velocity = direction * chase_speed
+			# Line of sight is clear! Proceed as normal.
+			if player_in_attack_range:
+				start_attack()
+			else:
+				var direction = global_position.direction_to(player_ref.global_position)
+				velocity = direction * chase_speed
 			
 	elif current_state == "ATTACK":
 		# Freeze the zombie in place while the attack animation plays
@@ -89,7 +111,7 @@ func _physics_process(_delta: float) -> void:
 func start_attack() -> void:
 	current_state = "ATTACK"
 	velocity = Vector2.ZERO 
-	
+	attack_sfx.play()
 	if player_ref != null:
 		var direction_to_player = global_position.direction_to(player_ref.global_position)
 		anim.rotation = direction_to_player.angle() - (PI / 2.0)
@@ -113,6 +135,8 @@ func _on_roam_timer_timeout() -> void:
 
 func _on_detection_area_body_entered(body: Node2D) -> void:
 	if body.name == "Player":
+		if current_state != "CHASE":
+			alert_sfx.play()
 		current_state = "CHASE"
 		player_ref = body
 
@@ -176,8 +200,12 @@ func take_damage(damage_amount: int) -> void:
 	# Did we just strike the killing blow?
 	if current_health <= 0:
 		die()
+	else:
+		hurt_sfx.play()
 
-func die() -> void:
+func die(is_fresh_kill: bool = true) -> void:
+	if is_fresh_kill:
+		death_sfx.play()
 	# 1. Create the base ID and grab the current rotation
 	var base_id = name + "_" + str(initial_position)
 	var save_string = base_id + "|" + str(anim.rotation)

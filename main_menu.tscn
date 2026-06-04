@@ -3,6 +3,9 @@
 [ext_resource type="Texture2D" uid="uid://dwbkwlitkg3wh" path="res://Main Menu.png" id="1_06t4h"]
 [ext_resource type="Script" uid="uid://4ecxyw0ul8ls" path="res://main_menu.gd" id="1_fu7sn"]
 [ext_resource type="FontFile" uid="uid://curyhh60561od" path="res://fonts/Silkscreen-Regular.ttf" id="2_7vrkn"]
+[ext_resource type="AudioStream" uid="uid://bfrkra6i4vh5v" path="res://sfx/MainMenu/MainMenuMusic.mp3" id="4_jix8l"]
+[ext_resource type="AudioStream" uid="uid://cvnqedfm1g8c1" path="res://sfx/MainMenu/HoverSound.mp3" id="5_nlkkf"]
+[ext_resource type="AudioStream" uid="uid://2crj5fxvsk2u" path="res://sfx/MainMenu/ClickSound.mp3" id="6_qe12f"]
 
 [node name="MainMenu" type="Control" unique_id=1935582410]
 layout_mode = 3
@@ -91,6 +94,18 @@ theme_override_font_sizes/font_size = 76
 text = "Geneticide 
 Awakening"
 horizontal_alignment = 1
+
+[node name="MenuMusic" type="AudioStreamPlayer" parent="." unique_id=789889169]
+stream = ExtResource("4_jix8l")
+autoplay = true
+
+[node name="HoverSound" type="AudioStreamPlayer" parent="." unique_id=1438860465]
+stream = ExtResource("5_nlkkf")
+volume_db = -0.01
+pitch_scale = 0.5
+
+[node name="ClickSound" type="AudioStreamPlayer" parent="." unique_id=895762468]
+stream = ExtResource("6_qe12f")
 
 [connection signal="pressed" from="VBoxContainer/Continue" to="." method="_on_continue_pressed"]
 [connection signal="pressed" from="VBoxContainer/Play" to="." method="_on_play_pressed"]

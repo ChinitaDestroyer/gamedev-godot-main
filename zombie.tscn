@@ -25,6 +25,10 @@
 [ext_resource type="Texture2D" uid="uid://cg0ywyueue4m4" path="res://1LVL/Zombie1_female/Death/Death_003.png" id="14_b1usl"]
 [ext_resource type="Texture2D" uid="uid://blg5itho5hlon" path="res://1LVL/Zombie1_female/Death/Death_004.png" id="15_o2vho"]
 [ext_resource type="Texture2D" uid="uid://b0y81ckijpwit" path="res://1LVL/Zombie1_female/Death/Death_005.png" id="16_p12lm"]
+[ext_resource type="AudioStream" uid="uid://dqn2r30ek1hrx" path="res://sfx/Zombie/ZombieAlert.mp3" id="26_o2vho"]
+[ext_resource type="AudioStream" uid="uid://bq8vqpcd0tv7j" path="res://sfx/Zombie/ZombieAttack.mp3" id="27_p12lm"]
+[ext_resource type="AudioStream" uid="uid://cm6sid0d6di4n" path="res://sfx/Zombie/ZombieDamage.wav" id="28_fiavj"]
+[ext_resource type="AudioStream" uid="uid://llvdodon3jqp" path="res://sfx/Zombie/ZombieDeath.mp3" id="29_5w78j"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_f8dj8"]
 animations = [{
@@ -160,8 +164,23 @@ shape = SubResource("RectangleShape2D_jw3ev")
 [node name="AttackArea" type="Area2D" parent="." unique_id=730642309]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea" unique_id=1526582497]
-position = Vector2(1.5, 24.625)
+position = Vector2(0, 37)
 shape = SubResource("RectangleShape2D_5xm6x")
+
+[node name="VisionRayCast" type="RayCast2D" parent="." unique_id=1596392366]
+target_position = Vector2(0, 42)
+
+[node name="AlertSound" type="AudioStreamPlayer" parent="." unique_id=1273755025]
+stream = ExtResource("26_o2vho")
+
+[node name="AttackSound" type="AudioStreamPlayer" parent="." unique_id=1170896770]
+stream = ExtResource("27_p12lm")
+
+[node name="HurtSound" type="AudioStreamPlayer" parent="." unique_id=2124069089]
+stream = ExtResource("28_fiavj")
+
+[node name="DeathSound" type="AudioStreamPlayer" parent="." unique_id=1981214594]
+stream = ExtResource("29_5w78j")
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="timeout" from="RoamTimer" to="." method="_on_roam_timer_timeout"]

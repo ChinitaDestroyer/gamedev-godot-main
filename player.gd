@@ -30,6 +30,7 @@ var tutorial_step: int = 0
 var tutorial_label: Label
 var initial_mouse_pos: Vector2
 var enemies_in_range: Array[Node2D] = []
+var is_game_loading: bool = true
 
 var objective_label: Label
 
@@ -41,6 +42,18 @@ var objective_label: Label
 @onready var gun_raycast: RayCast2D = $GunRayCast
 @onready var weapon_label: Label = $UI/WeaponLabel
 @onready var weapon_icon: TextureRect = $UI/WeaponIcon 
+
+@onready var walk_sfx: AudioStreamPlayer = $WalkSound
+@onready var knife_sfx: AudioStreamPlayer = $KnifeSound
+@onready var gun_sfx: AudioStreamPlayer = $GunSound
+@onready var hurt_sfx: AudioStreamPlayer = $HurtSound
+@onready var death_sfx: AudioStreamPlayer = $DeathSound
+@onready var armor_sfx: AudioStreamPlayer = $ArmorSound
+@onready var heal_sfx: AudioStreamPlayer = $HealSound
+@onready var reload_sfx: AudioStreamPlayer = $ReloadSound
+@onready var pickup_sfx: AudioStreamPlayer = $PickupSound
+@onready var equip_sfx: AudioStreamPlayer = $EquipSound
+@onready var flashlight_sfx: AudioStreamPlayer = $FlashlightSound
 
 func _ready() -> void:
 	if Global.has_checkpoint == true:
@@ -68,8 +81,10 @@ func _ready() -> void:
 	_on_armor_equipped(GlobalInventory.equipped_armor)
 	
 	GlobalInventory.consumable_used.connect(heal)
-	
+	is_game_loading = false
 func _on_weapon_equipped(weapon_name: String) -> void:
+	if weapon_name != "" and not is_game_loading:
+		equip_sfx.play()
 	if weapon_name == "Knife":
 		current_weapon_prefix = "knife_"
 		if not Global.seen_melee_tutorial:
@@ -87,8 +102,11 @@ func _on_weapon_equipped(weapon_name: String) -> void:
 	update_hud()
 		
 func _on_armor_equipped(armor_name: String) -> void:
+	
 	# --- NEW: Permanent Armor Visual Logic! ---
 	if armor_name == "Kevlar Vest": 
+		if not is_game_loading:
+			armor_sfx.play()
 		# You are actively wearing the vest (Full Protection)
 		current_armor_prefix = "armor_"
 		current_armor = max_armor
@@ -136,8 +154,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		reload()
 		
 	if event.is_action_pressed("toggle_flashlight"):
+		
 		if GlobalInventory.has_item("Flashlight"):
 			if has_node("FlashlightPivot/Flashlight"):
+				flashlight_sfx.play()
 				$FlashlightPivot/Flashlight.visible = not $FlashlightPivot/Flashlight.visible
 
 func attack() -> void:
@@ -174,8 +194,14 @@ func handle_input() -> void:
 func handle_movement(delta: float) -> void:
 	if input_dir != Vector2.ZERO:
 		velocity = velocity.move_toward(input_dir * current_speed, acceleration * delta)
+		
+		if not walk_sfx.playing:
+			walk_sfx.play()
 	else:
 		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
+		
+		if walk_sfx.playing:
+			walk_sfx.stop()
 
 func handle_animation() -> void:
 	var final_anim = current_armor_prefix + current_weapon_prefix
@@ -212,6 +238,7 @@ func handle_animation() -> void:
 func perform_attack() -> void:
 	if current_weapon_prefix == "knife_":
 		print("--- SWINGING KNIFE ---")
+		knife_sfx.play()
 		if enemies_in_range.is_empty():
 			print("Swung at the air!")
 		for enemy in enemies_in_range:
@@ -222,7 +249,7 @@ func perform_attack() -> void:
 		current_ammo -= 1
 		update_hud()
 		print("--- FIRING GUN ---")
-		
+		gun_sfx.play()
 		gun_raycast.force_raycast_update() 
 		if gun_raycast.is_colliding():
 			var target = gun_raycast.get_collider()
@@ -258,7 +285,11 @@ func take_damage(damage_amount: int) -> void:
 	health_bar.value = current_health
 	
 	if current_health <= 0:
+		# Player was killed. Only the death_sfx (inside the die function) will play.
 		die()
+	else:
+		# Player survived. Play the normal hurt sound!
+		hurt_sfx.play()
 
 func break_armor() -> void:
 	print("The Kevlar Vest was destroyed!")
@@ -285,7 +316,7 @@ func die() -> void:
 		return
 	is_dead = true
 	velocity = Vector2.ZERO 
-	
+	death_sfx.play()
 	print("The Player has died!")
 	GlobalInventory.equipped_weapon = ""
 	$CollisionShape2D.set_deferred("disabled", true)
@@ -376,6 +407,7 @@ func reload() -> void:
 		
 	is_reloading = true
 	print("Reloading...")
+	reload_sfx.play()
 	if weapon_label:
 		weapon_label.text = "Equipped: Pistol | Reloading..."
 		
@@ -492,6 +524,7 @@ func update_objective(new_text: String) -> void:
 	objective_label.show()
 	
 func heal(amount: int) -> void:
+	heal_sfx.play()
 	# Add the health
 	current_health += amount
 	
@@ -508,3 +541,5 @@ func heal(amount: int) -> void:
 	var tween = create_tween()
 	anim.modulate = Color(0.0, 1.0, 0.0) # Flash green
 	tween.tween_property(anim, "modulate", Color(1.0, 1.0, 1.0), 0.3)
+func play_pickup_sound() -> void:
+	pickup_sfx.play()

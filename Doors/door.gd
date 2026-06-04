@@ -3,7 +3,9 @@ extends Node2D
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 @onready var solid_collision: CollisionShape2D = $StaticBody2D/SolidCollision
 @onready var prompt: Label = $Label
-
+@onready var open_sfx: AudioStreamPlayer = $OpenSound
+@onready var close_sfx: AudioStreamPlayer = $CloseSound
+@onready var locked_sfx: AudioStreamPlayer = $LockedSound
 # --- NEW: Exported variables ---
 # This creates a checkbox in the Inspector for every individual door!
 @export var is_locked: bool = false 
@@ -56,12 +58,14 @@ func toggle_door() -> void:
 		if GlobalInventory.consume_key():
 			# We found a key! Turn off the lock permanently.
 			is_locked = false
+			open_sfx.play()
 			DialogManager.show_dialogue(["*Click!* You unlocked the door."])
 			
 			# Notice there is NO 'return' here! 
 			# Because we didn't return, the code will continue down below and physically open the door!
 			
 		else:
+			locked_sfx.play()
 			# No key found in the inventory!
 			DialogManager.show_dialogue(["The door is firmly locked.", "You need a key to open it!"])
 			return # Stop the function here so the door stays shut
@@ -70,6 +74,7 @@ func toggle_door() -> void:
 	is_open = !is_open 
 	
 	if is_open:
+		open_sfx.play()
 		anim.play("open")
 		solid_collision.set_deferred("disabled", true)
 		prompt.text = "[E] Close"
@@ -79,6 +84,7 @@ func toggle_door() -> void:
 			$LightOccluder2D.hide()
 			
 	else:
+		close_sfx.play()
 		anim.play("closed")
 		solid_collision.set_deferred("disabled", false)
 		prompt.text = "[E] Open"

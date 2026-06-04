@@ -27,6 +27,10 @@
 [ext_resource type="Texture2D" uid="uid://cdovmh6sd64k0" path="res://4LVL/Boss2/Walk/Walk_005.png" id="25_01wop"]
 [ext_resource type="Texture2D" uid="uid://bavx11d4b6dkj" path="res://4LVL/Boss2/Walk/Walk_006.png" id="26_7fmn2"]
 [ext_resource type="Texture2D" uid="uid://ca0568a0h0bi4" path="res://4LVL/Boss2/Walk/Walk_007.png" id="27_0hurs"]
+[ext_resource type="AudioStream" uid="uid://b7p2neitmurpa" path="res://sfx/Zombie/BossZombieAlert.mp3" id="28_bqj7m"]
+[ext_resource type="AudioStream" uid="uid://bq8vqpcd0tv7j" path="res://sfx/Zombie/ZombieAttack.mp3" id="29_7fiiy"]
+[ext_resource type="AudioStream" uid="uid://cm6sid0d6di4n" path="res://sfx/Zombie/ZombieDamage.wav" id="30_qkrnn"]
+[ext_resource type="AudioStream" uid="uid://c57pukqflyb5p" path="res://sfx/Zombie/BossZombieDeath.mp3" id="31_b3r0s"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_f8dj8"]
 animations = [{
@@ -140,7 +144,7 @@ size = Vector2(113, 204)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5xm6x"]
 size = Vector2(81, 50)
 
-[node name="Zombie" type="CharacterBody2D" unique_id=1244593536]
+[node name="BossZombie" type="CharacterBody2D" unique_id=1244593536]
 z_index = 1
 script = ExtResource("1_tolwf")
 
@@ -170,6 +174,23 @@ shape = SubResource("RectangleShape2D_jw3ev")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea" unique_id=1526582497]
 position = Vector2(0.5, 45)
 shape = SubResource("RectangleShape2D_5xm6x")
+
+[node name="VisionRayCast" type="RayCast2D" parent="." unique_id=229480353]
+
+[node name="AlertSound" type="AudioStreamPlayer" parent="." unique_id=1628279876]
+stream = ExtResource("28_bqj7m")
+
+[node name="AttackSound" type="AudioStreamPlayer" parent="." unique_id=408696741]
+stream = ExtResource("29_7fiiy")
+
+[node name="HurtSound" type="AudioStreamPlayer" parent="." unique_id=1169118895]
+stream = ExtResource("30_qkrnn")
+
+[node name="DeathSound" type="AudioStreamPlayer" parent="." unique_id=1183844083]
+stream = ExtResource("31_b3r0s")
+
+[node name="EnrageSound" type="AudioStreamPlayer" parent="." unique_id=316739349]
+stream = ExtResource("28_bqj7m")
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="timeout" from="RoamTimer" to="." method="_on_roam_timer_timeout"]

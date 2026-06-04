@@ -3,6 +3,9 @@
 [ext_resource type="Script" uid="uid://6i2jbrfw8ylg" path="res://Doors/door.gd" id="1_qvhre"]
 [ext_resource type="Texture2D" uid="uid://bvdcvbco0ws6p" path="res://asset ni oswel/Door 4.png" id="2_ri6hg"]
 [ext_resource type="Texture2D" uid="uid://cuonrvmft31q4" path="res://asset ni oswel/Door 1.png" id="3_idkir"]
+[ext_resource type="AudioStream" uid="uid://dnaoqytn3jdc6" path="res://sfx/Door/OpenDoor.mp3" id="4_ff2mv"]
+[ext_resource type="AudioStream" uid="uid://bbtjpl2a5q0vs" path="res://sfx/Door/CloseDoor.mp3" id="5_g1872"]
+[ext_resource type="AudioStream" uid="uid://bfswv2qeyb26i" path="res://sfx/Door/LockedDoor.mp3" id="6_414d7"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_8rcos"]
 animations = [{
@@ -71,6 +74,15 @@ theme_override_font_sizes/font_size = 30
 text = "[E] Open"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="OpenSound" type="AudioStreamPlayer" parent="." unique_id=1683353753]
+stream = ExtResource("4_ff2mv")
+
+[node name="CloseSound" type="AudioStreamPlayer" parent="." unique_id=68972115]
+stream = ExtResource("5_g1872")
+
+[node name="LockedSound" type="AudioStreamPlayer" parent="." unique_id=1045235559]
+stream = ExtResource("6_414d7")
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]

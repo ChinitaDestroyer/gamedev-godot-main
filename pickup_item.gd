@@ -65,7 +65,10 @@ func _input(event: InputEvent) -> void:
 			if player_ref != null and player_ref.has_method("add_ammo"):
 				player_ref.add_ammo(item_value)
 				player_ref.show_tutorial_message("Picked up " + str(item_value) + " bullets!", 3.0)
-			
+				
+				if player_ref.has_method("play_pickup_sound"):
+					player_ref.play_pickup_sound()
+					
 			Global.completed_events.append(my_id)
 			queue_free()
 			return
@@ -85,6 +88,8 @@ func _input(event: InputEvent) -> void:
 		}
 		
 		if GlobalInventory.add_item(my_item_data):
+			if player_ref != null and player_ref.has_method("play_pickup_sound"):
+				player_ref.play_pickup_sound()
 			if player_ref != null and player_ref.has_method("show_tutorial_message"):
 				if item_type == "flashlight" and not Global.seen_flashlight_tutorial:
 					Global.seen_flashlight_tutorial = true

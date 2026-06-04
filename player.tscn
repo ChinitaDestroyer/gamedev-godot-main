@@ -63,6 +63,17 @@
 [ext_resource type="Texture2D" uid="uid://c5rpu7klcu3he" path="res://Man/Knife/Knife_007.png" id="16_ygbnx"]
 [ext_resource type="Texture2D" uid="uid://brvttamxpsas5" path="res://light.png" id="26_7hik5"]
 [ext_resource type="Script" uid="uid://bg2bovscr4ptn" path="res://quest_log.gd" id="57_tw8ou"]
+[ext_resource type="AudioStream" uid="uid://drt7hdnus5v7b" path="res://sfx/character/PistolSound.wav" id="64_86rna"]
+[ext_resource type="AudioStream" uid="uid://bwkcnhuonpxmg" path="res://sfx/character/WalkSound.mp3" id="64_xg1a7"]
+[ext_resource type="AudioStream" uid="uid://24g3wmdfm1yf" path="res://sfx/character/KnifeSound.mp3" id="65_ob4mi"]
+[ext_resource type="AudioStream" uid="uid://d3rgbi6fjbw42" path="res://sfx/character/HurtSound2.mp3" id="67_ax26h"]
+[ext_resource type="AudioStream" uid="uid://cak6uo6y6jgw0" path="res://sfx/character/DeathSound.mp3" id="68_kh4g0"]
+[ext_resource type="AudioStream" uid="uid://dnxw46jpypfn4" path="res://sfx/character/ArmorSound.mp3" id="69_fkf2u"]
+[ext_resource type="AudioStream" uid="uid://dtiedr4dctjdj" path="res://sfx/character/HealSound.mp3" id="70_s7jk6"]
+[ext_resource type="AudioStream" uid="uid://0eta0v5yeuhh" path="res://sfx/character/ReloadSound.mp3" id="71_feeoa"]
+[ext_resource type="AudioStream" uid="uid://chcwaldyqd70" path="res://sfx/character/EquipSound.mp3" id="72_feeoa"]
+[ext_resource type="AudioStream" uid="uid://2hsknwg0cc3i" path="res://sfx/character/PickupItemSound.mp3" id="73_m6nxt"]
+[ext_resource type="AudioStream" uid="uid://fboim1siem2n" path="res://sfx/character/FlashlightOnOff.mp3" id="74_m6nxt"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ivps1"]
 animations = [{
@@ -85,7 +96,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("7_kh4g0")
 }],
-"loop": true,
+"loop": false,
 "name": &"armor_death",
 "speed": 8.0
 }, {
@@ -554,6 +565,39 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Main Menu
 "
+
+[node name="WalkSound" type="AudioStreamPlayer" parent="." unique_id=1821812041]
+stream = ExtResource("64_xg1a7")
+
+[node name="KnifeSound" type="AudioStreamPlayer" parent="." unique_id=660686062]
+stream = ExtResource("65_ob4mi")
+
+[node name="GunSound" type="AudioStreamPlayer" parent="." unique_id=432751122]
+stream = ExtResource("64_86rna")
+
+[node name="HurtSound" type="AudioStreamPlayer" parent="." unique_id=979082596]
+stream = ExtResource("67_ax26h")
+
+[node name="DeathSound" type="AudioStreamPlayer" parent="." unique_id=1019413808]
+stream = ExtResource("68_kh4g0")
+
+[node name="ArmorSound" type="AudioStreamPlayer" parent="." unique_id=438325858]
+stream = ExtResource("69_fkf2u")
+
+[node name="HealSound" type="AudioStreamPlayer" parent="." unique_id=406143180]
+stream = ExtResource("70_s7jk6")
+
+[node name="ReloadSound" type="AudioStreamPlayer" parent="." unique_id=490314851]
+stream = ExtResource("71_feeoa")
+
+[node name="EquipSound" type="AudioStreamPlayer" parent="." unique_id=1700986374]
+stream = ExtResource("72_feeoa")
+
+[node name="PickupSound" type="AudioStreamPlayer" parent="." unique_id=2108472501]
+stream = ExtResource("73_m6nxt")
+
+[node name="FlashlightSound" type="AudioStreamPlayer" parent="." unique_id=443705261]
+stream = ExtResource("74_m6nxt")
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="body_entered" from="WeaponArea" to="." method="_on_weapon_area_body_entered"]
